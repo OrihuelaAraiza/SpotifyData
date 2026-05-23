@@ -90,13 +90,13 @@ export function CompareSection() {
         <CardContent>
           <CompareRadar />
           <p className="text-[11px] text-white/25 text-center mt-4">
-            Valores normalizados al 100 para comparacion directa. Dimensiones derivadas de los datos de streaming.
+            Valores normalizados al 100 para comparación directa. Dimensiones derivadas de los datos de streaming.
           </p>
         </CardContent>
       </Card>
 
       {/* Dual timeline — pass monthly objects directly */}
-      <SectionLabel icon={<TrendingUp size={14} />} color="#ffffff">Evolucion Paralela</SectionLabel>
+      <SectionLabel icon={<TrendingUp size={14} />} color="#ffffff">Evolución Paralela</SectionLabel>
       <Card>
         <CardHeader>
           <CardTitle>Horas por Mes — Juan Pablo vs Aranza</CardTitle>
@@ -110,13 +110,13 @@ export function CompareSection() {
       <SectionLabel icon={<CalendarDays size={14} />} color="#ffffff">Patrones Comparados</SectionLabel>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
-          <CardHeader><CardTitle>Horas por Dia de la Semana</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Horas por Día de la Semana</CardTitle></CardHeader>
           <CardContent>
             <WeekdayChart jpData={JP.weekdayHours} arData={AR.weekdayHours} />
           </CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle>Distribucion Horaria del Dia</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Distribución Horaria del Día</CardTitle></CardHeader>
           <CardContent>
             <DualHourlyChart jpData={JP.hourlyHours} arData={AR.hourlyHours} />
           </CardContent>
@@ -129,22 +129,22 @@ export function CompareSection() {
         <CardHeader>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-right text-[13px] font-bold" style={{ color: jpColor }}>{JP.short}</div>
-            <div className="text-center text-[11px] text-white/30 uppercase tracking-wider">Metrica</div>
+            <div className="text-center text-[11px] text-white/30 uppercase tracking-wider">Métrica</div>
             <div className="text-left text-[13px] font-bold" style={{ color: arColor }}>{AR.short}</div>
           </div>
         </CardHeader>
         <CardContent>
           <VSRow label="Horas totales"    jpVal={`${JP.totals.hours.toLocaleString("es-MX",{maximumFractionDigits:0})}h`}  arVal={`${AR.totals.hours.toLocaleString("es-MX",{maximumFractionDigits:0})}h`}  jpColor={jpColor} arColor={arColor} higher="ar" />
-          <VSRow label="Dias activos"     jpVal={JP.totals.activeDays.toLocaleString("es-MX")}                             arVal={AR.totals.activeDays.toLocaleString("es-MX")}                             jpColor={jpColor} arColor={arColor} higher="ar" />
-          <VSRow label="Promedio h/dia"   jpVal={`${JP.totals.avgPerDay.toFixed(2)}h`}                                     arVal={`${AR.totals.avgPerDay.toFixed(2)}h`}                                     jpColor={jpColor} arColor={arColor} higher="ar" />
-          <VSRow label="Artistas unicos"  jpVal={JP.totals.uniqueArtists.toLocaleString("es-MX")}                          arVal={AR.totals.uniqueArtists.toLocaleString("es-MX")}                          jpColor={jpColor} arColor={arColor} higher="jp" />
-          <VSRow label="Canciones unicas" jpVal={JP.totals.uniqueTracks.toLocaleString("es-MX")}                           arVal={AR.totals.uniqueTracks.toLocaleString("es-MX")}                           jpColor={jpColor} arColor={arColor} higher="ar" />
+          <VSRow label="Días activos"      jpVal={JP.totals.activeDays.toLocaleString("es-MX")}                             arVal={AR.totals.activeDays.toLocaleString("es-MX")}                             jpColor={jpColor} arColor={arColor} higher="ar" />
+          <VSRow label="Promedio h/día"   jpVal={`${JP.totals.avgPerDay.toFixed(2)}h`}                                     arVal={`${AR.totals.avgPerDay.toFixed(2)}h`}                                     jpColor={jpColor} arColor={arColor} higher="ar" />
+          <VSRow label="Artistas únicos"  jpVal={JP.totals.uniqueArtists.toLocaleString("es-MX")}                          arVal={AR.totals.uniqueArtists.toLocaleString("es-MX")}                          jpColor={jpColor} arColor={arColor} higher="jp" />
+          <VSRow label="Canciones únicas" jpVal={JP.totals.uniqueTracks.toLocaleString("es-MX")}                           arVal={AR.totals.uniqueTracks.toLocaleString("es-MX")}                           jpColor={jpColor} arColor={arColor} higher="ar" />
           <VSRow label="Skip rate"        jpVal={`${JP.totals.skipRate}%`}                                                 arVal={`${AR.totals.skipRate}%`}                                                 jpColor={jpColor} arColor={arColor} higher="ar" />
           <VSRow label="Sesiones totales" jpVal={JP.sessions.count.toLocaleString("es-MX")}                               arVal={AR.sessions.count.toLocaleString("es-MX")}                               jpColor={jpColor} arColor={arColor} higher="ar" />
-          <VSRow label="Duracion sesion"  jpVal={`${JP.sessions.avgMin.toFixed(0)} min`}                                   arVal={`${AR.sessions.avgMin.toFixed(0)} min`}                                   jpColor={jpColor} arColor={arColor} higher="ar" />
+          <VSRow label="Duración sesión"  jpVal={`${JP.sessions.avgMin.toFixed(0)} min`}                                   arVal={`${AR.sessions.avgMin.toFixed(0)} min`}                                   jpColor={jpColor} arColor={arColor} higher="ar" />
           <VSRow label="Top artista %"    jpVal={`${JP.concentration.top1}%`}                                              arVal={`${AR.concentration.top1}%`}                                              jpColor={jpColor} arColor={arColor} higher="jp" />
           <VSRow label="Top 10 artistas%" jpVal={`${JP.concentration.top10}%`}                                             arVal={`${AR.concentration.top10}%`}                                             jpColor={jpColor} arColor={arColor} higher="jp" />
-          <VSRow label="Ano pico"         jpVal={`${JP.peaks.peakYear} (${JP.peaks.peakYearH.toFixed(0)}h)`}               arVal={`${AR.peaks.peakYear} (${AR.peaks.peakYearH.toFixed(0)}h)`}               jpColor={jpColor} arColor={arColor} higher="ar" />
+          <VSRow label="Año pico"         jpVal={`${JP.peaks.peakYear} (${JP.peaks.peakYearH.toFixed(0)}h)`}               arVal={`${AR.peaks.peakYear} (${AR.peaks.peakYearH.toFixed(0)}h)`}               jpColor={jpColor} arColor={arColor} higher="ar" />
         </CardContent>
       </Card>
 
@@ -153,38 +153,38 @@ export function CompareSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {[
           {
-            title: "Concentracion vs Diversidad",
-            text: `JP destina el ${JP.concentration.top1}% de su tiempo a solo un artista (Twenty One Pilots). Aranza distribuye mas: su top artista tiene solo ${AR.concentration.top1}%. Obsesion vs exploracion.`,
+            title: "Concentración vs Diversidad",
+            text: `JP destina el ${JP.concentration.top1}% de su tiempo a solo un artista (Twenty One Pilots). Aranza distribuye más: su top artista tiene solo ${AR.concentration.top1}%. Obsesión vs exploración.`,
             jp: `${JP.concentration.top10}% en top 10`,
             ar: `${AR.concentration.top10}% en top 10`,
           },
           {
             title: "Escucha Maratonista",
-            text: `Aranza dobla en horas totales: ${AR.totals.hours.toFixed(0)}h vs ${JP.totals.hours.toFixed(0)}h de JP. Sus sesiones son ${(AR.sessions.avgMin - JP.sessions.avgMin).toFixed(0)} min mas largas en promedio.`,
-            jp: `${JP.sessions.avgMin.toFixed(0)} min/sesion`,
-            ar: `${AR.sessions.avgMin.toFixed(0)} min/sesion`,
+            text: `Aranza dobla en horas totales: ${AR.totals.hours.toFixed(0)}h vs ${JP.totals.hours.toFixed(0)}h de JP. Sus sesiones son ${(AR.sessions.avgMin - JP.sessions.avgMin).toFixed(0)} min más largas en promedio.`,
+            jp: `${JP.sessions.avgMin.toFixed(0)} min/sesión`,
+            ar: `${AR.sessions.avgMin.toFixed(0)} min/sesión`,
           },
           {
             title: "Ritmos Circadianos Opuestos",
-            text: `JP tiene su pico a las ${JP.peaks.peakHour}:00 (tarde) con anomalias nocturnas de 1-2 AM. Aranza tiene pico a las ${AR.peaks.peakHour}:00 (tarde-noche) con patron de semana laboral diurna.`,
+            text: `JP tiene su pico a las ${JP.peaks.peakHour}:00 (tarde) con anomalías nocturnas de 1-2 AM. Aranza tiene pico a las ${AR.peaks.peakHour}:00 (tarde-noche) con patrón de semana laboral diurna.`,
             jp: `Pico: ${JP.peaks.peakHour}:00`,
             ar: `Pico: ${AR.peaks.peakHour}:00`,
           },
           {
-            title: "Generos Paralelos",
+            title: "Géneros Paralelos",
             text: "JP: rock alternativo e indie (Twenty One Pilots, The 1975, The Killers). Aranza: pop latino y pop global (Morat, Bieber, Bad Bunny). Universos musicales que rara vez se cruzan.",
             jp: "Rock alternativo",
             ar: "Pop latino & global",
           },
           {
-            title: "Relacion con el Skip",
-            text: `JP salta ${(JP.totals.skipRate - AR.totals.skipRate).toFixed(1)}pp mas que Aranza. Su skip es contextual: se dispara al ${Math.max(...JP.hourlySkip).toFixed(0)}% en horas laborales. Aranza es consistentemente mas comprometida.`,
+            title: "Relación con el Skip",
+            text: `JP salta ${(JP.totals.skipRate - AR.totals.skipRate).toFixed(1)}pp más que Aranza. Su skip es contextual: se dispara al ${Math.max(...JP.hourlySkip).toFixed(0)}% en horas laborales. Aranza es consistentemente más comprometida.`,
             jp: `${JP.totals.skipRate}% skip rate`,
             ar: `${AR.totals.skipRate}% skip rate`,
           },
           {
             title: "Plataformas Similares",
-            text: `Ambos escuchan principalmente desde iPhone (87%+). La diferencia: Aranza usa iPad el 12.2% del tiempo vs 4.2% de JP, indicando mas escucha sedentaria para ella.`,
+            text: `Ambos escuchan principalmente desde iPhone (87%+). La diferencia: Aranza usa iPad el 12.2% del tiempo vs 4.2% de JP, indicando más escucha sedentaria para ella.`,
             jp: `${JP.platforms[0].pct}% iPhone`,
             ar: `${AR.platforms[0].pct}% iPhone`,
           },

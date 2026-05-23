@@ -232,7 +232,7 @@ function MarkovHeatmap({ matrix, color }) {
   return (
     <div>
       <div className="mb-4 text-[11px] text-white/30">
-        Probabilidad de que la sesion siguiente sea en el bloque de columna, dado que la actual es en el bloque de fila.
+        Probabilidad de que la sesión siguiente sea en el bloque de columna, dado que la actual es en el bloque de fila.
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-center">
@@ -240,14 +240,14 @@ function MarkovHeatmap({ matrix, color }) {
             <tr>
               <th className="text-[10px] text-white/20 font-normal pb-2 pr-3 text-right">Origen →</th>
               {BLOCKS.map(b => (
-                <th key={b} className="text-[10px] text-white/40 font-semibold pb-2 px-1 capitalize">{b}</th>
+                <th key={b} className="text-[10px] text-white/40 font-semibold pb-2 px-1">{BLOCK_LABELS[b]?.split("\n")[0] ?? b}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {BLOCKS.map(src => (
               <tr key={src}>
-                <td className="text-[10px] text-white/40 font-semibold pr-3 py-1 text-right capitalize">{src}</td>
+                <td className="text-[10px] text-white/40 font-semibold pr-3 py-1 text-right">{BLOCK_LABELS[src]?.split("\n")[0] ?? src}</td>
                 {BLOCKS.map(dst => {
                   const prob = matrix[src]?.[dst] ?? 0;
                   const alpha = Math.round(prob * 220);
@@ -274,9 +274,9 @@ function MarkovHeatmap({ matrix, color }) {
       </div>
       {tooltip && (
         <div className="mt-3 text-[12px] text-white/50">
-          Sesion en <span className="text-white font-semibold capitalize">{tooltip.src}</span>
+          Sesión en <span className="text-white font-semibold">{BLOCK_LABELS[tooltip.src]?.split("\n")[0] ?? tooltip.src}</span>
           {" → "}
-          siguiente en <span className="font-semibold capitalize" style={{ color }}>{tooltip.dst}</span>:
+          siguiente en <span className="font-semibold" style={{ color }}>{BLOCK_LABELS[tooltip.dst]?.split("\n")[0] ?? tooltip.dst}</span>:
           {" "}
           <span className="font-black text-white">{(tooltip.prob * 100).toFixed(1)}%</span> de probabilidad
         </div>
@@ -357,7 +357,7 @@ function ReasonChart({ reasons, color }) {
   const maxE = Math.max(...reasons.ends.map(r => r.count));
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {[["Inicio de reproduccion", reasons.starts, maxS], ["Fin de reproduccion", reasons.ends, maxE]].map(([title, rows, mx]) => (
+      {[["Inicio de reproducción", reasons.starts, maxS], ["Fin de reproducción", reasons.ends, maxE]].map(([title, rows, mx]) => (
         <div key={title}>
           <div className="text-[11px] text-white/30 uppercase tracking-wider mb-3">{title}</div>
           <div className="space-y-2">
@@ -426,9 +426,9 @@ function PersonAnalysis({ person, data }) {
       </motion.div>
 
       {/* Reasons */}
-      <SectionLabel icon={<GitBranch size={14} />} color={color}>Comportamiento de Reproduccion</SectionLabel>
+      <SectionLabel icon={<GitBranch size={14} />} color={color}>Comportamiento de Reproducción</SectionLabel>
       <Card>
-        <CardHeader><CardTitle>Causas de Inicio y Fin de Reproduccion</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Causas de Inicio y Fin de Reproducción</CardTitle></CardHeader>
         <CardContent><ReasonChart reasons={reasons} color={color} /></CardContent>
       </Card>
 
@@ -447,7 +447,7 @@ function PersonAnalysis({ person, data }) {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader><CardTitle>Linea de Tiempo por Cluster</CardTitle></CardHeader>
+          <CardHeader><CardTitle>Línea de Tiempo por Cluster</CardTitle></CardHeader>
           <CardContent>
             <ClusterTimeline monthClusters={monthClusters} clusterNames={clusterNames} color={color} />
           </CardContent>
@@ -456,12 +456,12 @@ function PersonAnalysis({ person, data }) {
       <ClusterCards profiles={ml.clustering.profiles} />
 
       {/* Markov */}
-      <SectionLabel icon={<Shuffle size={14} />} color={color}>Cadena de Markov — Transiciones de Sesion</SectionLabel>
+      <SectionLabel icon={<Shuffle size={14} />} color={color}>Cadena de Markov — Transiciones de Sesión</SectionLabel>
       <Card>
         <CardHeader>
-          <CardTitle>Matriz de Transicion entre Bloques Horarios</CardTitle>
+          <CardTitle>Matriz de Transición entre Bloques Horarios</CardTitle>
           <p className="text-[11px] text-white/30 mt-1">
-            Calculada sobre {timeblockMarkov.top.reduce((s, t) => s, 0).toLocaleString()} transiciones de sesion consecutivas
+            Calculada sobre {timeblockMarkov.top.reduce((s, t) => s, 0).toLocaleString()} transiciones de sesión consecutivas
           </p>
         </CardHeader>
         <CardContent>
@@ -470,7 +470,7 @@ function PersonAnalysis({ person, data }) {
       </Card>
 
       {/* Skip Classifier */}
-      <SectionLabel icon={<FlaskConical size={14} />} color={color}>Clasificador de Skip — Regresion Logistica</SectionLabel>
+      <SectionLabel icon={<FlaskConical size={14} />} color={color}>Clasificador de Skip — Regresión Logística</SectionLabel>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
         {[
           { label: "Accuracy", value: `${(ml.skipClassifier.accuracy * 100).toFixed(1)}%` },
@@ -492,7 +492,7 @@ function PersonAnalysis({ person, data }) {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
-          <CardHeader><CardTitle>Matriz de Confusion</CardTitle>
+          <CardHeader><CardTitle>Matriz de Confusión</CardTitle>
             <p className="text-[11px] text-white/30 mt-1">
               {ml.skipClassifier.testRows.toLocaleString()} registros de prueba
             </p>
@@ -503,7 +503,7 @@ function PersonAnalysis({ person, data }) {
         </Card>
         <Card>
           <CardHeader><CardTitle>Coeficientes del Modelo</CardTitle>
-            <p className="text-[11px] text-white/30 mt-1">Factores que mas influyen en predecir un skip</p>
+            <p className="text-[11px] text-white/30 mt-1">Factores que más influyen en predecir un skip</p>
           </CardHeader>
           <CardContent>
             <CoefficientsChart coefs={ml.skipClassifier.topCoefficients} color={color} />

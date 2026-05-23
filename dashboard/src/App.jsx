@@ -15,7 +15,7 @@ const PERSON_TABS = [
 
 const SUB_TABS = [
   { id: "profile",  label: "Perfil",   icon: <User size={12} />        },
-  { id: "analysis", label: "Analisis", icon: <FlaskConical size={12} /> },
+  { id: "analysis", label: "Análisis", icon: <FlaskConical size={12} /> },
 ];
 
 function SpotifyLogo() {
@@ -158,7 +158,7 @@ export default function App() {
       <footer className="border-t border-white/[0.04] py-6 mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="text-[11px] text-white/15">
-            Datos extraidos de Spotify Extended History · 2015–2026
+            Datos extraídos de Spotify Extended History · 2015–2026
           </div>
           <div className="flex items-center gap-2">
             <SpotifyLogo />
