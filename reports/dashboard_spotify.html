@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Dashboard Spotify - Proyecto Final</title>
+<style>
+body { margin:0; font-family: Arial, sans-serif; background:#f7f8f5; color:#191414; }
+header { padding:32px 44px; background:#191414; color:white; }
+h1 { margin:0 0 8px; font-size:34px; }
+h2 { margin:34px 0 16px; }
+main { max-width:1180px; margin:0 auto; padding:28px; }
+.kpis { display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin:16px 0 22px; }
+.kpis div { background:white; border:1px solid #d8ddd8; border-radius:8px; padding:14px; }
+.kpis b { display:block; font-size:26px; color:#1DB954; }
+.kpis span { color:#63706A; }
+.grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:18px; }
+img { width:100%; background:white; border:1px solid #d8ddd8; border-radius:8px; }
+section { margin-bottom:40px; }
+@media (max-width:800px) { .grid,.kpis { grid-template-columns:1fr; } header { padding:24px; } main { padding:18px; } }
+</style>
+</head>
+<body>
+<header>
+<h1>Proyecto Final Spotify</h1>
+<p>Dos historiales extendidos, limpieza, EDA, Machine Learning y reflexion de privacidad.</p>
+</header>
+<main>
+<section>
+<h2>Comparativo</h2>
+<div class="kpis">
+<div><b>420,913</b><span>filas limpias</span></div>
+<div><b>Aranza</b><span>mayor tiempo</span></div>
+<div><b>Aranza</b><span>mayor diversidad</span></div>
+<div><b>Juan</b><span>mayor skip</span></div>
+</div>
+<div class="grid">
+<img src="figures/comparativo/01_comparativo_horas_mes.png" alt="Comparativo mensual">
+<img src="figures/comparativo/02_comparativo_kpis.png" alt="Comparativo KPIs">
+<img src="figures/comparativo/03_comparativo_hora.png" alt="Comparativo por hora">
+</div>
+</section>
+
+        <section>
+          <h2>Juan Pablo Orihuela Araiza</h2>
+          <div class="kpis">
+            <div><b>4,716</b><span>horas</span></div>
+            <div><b>2,864</b><span>artistas</span></div>
+            <div><b>7,993</b><span>canciones</span></div>
+            <div><b>27.5%</b><span>skip</span></div>
+          </div>
+          <div class="grid">
+            <img src="figures/juan_pablo/01_horas_por_mes.png" alt="Horas por mes">
+            <img src="figures/juan_pablo/03_heatmap_semana_hora.png" alt="Heatmap semana hora">
+            <img src="figures/juan_pablo/04_top20_artistas_horas.png" alt="Top artistas">
+            <img src="figures/juan_pablo/07_completion_vs_skip.png" alt="Completion vs skip">
+          </div>
+        </section>
+        
+        <section>
+          <h2>Aranza Romo Lima</h2>
+          <div class="kpis">
+            <div><b>9,142</b><span>horas</span></div>
+            <div><b>2,662</b><span>artistas</span></div>
+            <div><b>9,763</b><span>canciones</span></div>
+            <div><b>15.9%</b><span>skip</span></div>
+          </div>
+          <div class="grid">
+            <img src="figures/aranza/01_horas_por_mes.png" alt="Horas por mes">
+            <img src="figures/aranza/03_heatmap_semana_hora.png" alt="Heatmap semana hora">
+            <img src="figures/aranza/04_top20_artistas_horas.png" alt="Top artistas">
+            <img src="figures/aranza/07_completion_vs_skip.png" alt="Completion vs skip">
+          </div>
+        </section>
+        
+</main>
+</body>
+</html>

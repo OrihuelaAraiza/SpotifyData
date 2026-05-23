@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spotify Analytics — JP & Aranza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0d0d0d;
+  --surface: #181818;
+  --card: #1e1e1e;
+  --card2: #252525;
+  --border: #333;
+  --text: #ffffff;
+  --text2: #b3b3b3;
+  --text3: #737373;
+  --jp: #1DB954;
+  --jp-a: rgba(29,185,84,0.15);
+  --jp-b: rgba(29,185,84,0.08);
+  --ar: #E8119C;
+  --ar-a: rgba(232,17,156,0.15);
+  --ar-b: rgba(232,17,156,0.08);
+  --gold: #f59e0b;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;line-height:1.5;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(13,13,13,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;}
+.nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:32px;height:64px;}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;letter-spacing:-0.3px;}
+.nav-logo svg{width:28px;height:28px;}
+.nav-tabs{display:flex;gap:4px;flex:1;}
+.tab-btn{background:none;border:none;color:var(--text2);font-family:'Inter',sans-serif;font-size:14px;font-weight:600;padding:8px 20px;border-radius:30px;cursor:pointer;transition:all .2s;letter-spacing:0.3px;}
+.tab-btn:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.tab-btn.active{background:var(--text);color:var(--bg);}
+.tab-btn.jp.active{background:var(--jp);color:#000;}
+.tab-btn.ar.active{background:var(--ar);color:#fff;}
+.tab-btn.cmp.active{background:linear-gradient(135deg,var(--jp),var(--ar));color:#fff;}
+
+/* SECTIONS */
+.section{display:none;animation:fadeIn .3s ease;}
+.section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.page{max-width:1400px;margin:0 auto;padding:40px 24px 80px;}
+
+/* HERO */
+.hero{padding:48px 0 40px;text-align:center;}
+.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+.hero-name{font-size:52px;font-weight:900;letter-spacing:-2px;line-height:1.05;margin-bottom:16px;}
+.hero-name.jp-gradient{background:linear-gradient(135deg,#1DB954,#4ade80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-name.ar-gradient{background:linear-gradient(135deg,#E8119C,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{font-size:16px;color:var(--text2);max-width:600px;margin:0 auto 40px;}
+.hero-stats{display:flex;justify-content:center;gap:48px;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-val{font-size:36px;font-weight:900;letter-spacing:-1px;line-height:1;}
+.hero-stat-lbl{font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+@media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr);}.grid-3{grid-template-columns:repeat(2,1fr);}.grid-2{grid-template-columns:1fr;}}
+@media(max-width:600px){.grid-4{grid-template-columns:repeat(2,1fr);}.grid-3{grid-template-columns:1fr;}.grid-2{grid-template-columns:1fr;}}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:border-color .2s;}
+.card:hover{border-color:#444;}
+.card-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title i{font-size:13px;}
+
+/* KPI CARDS */
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;display:flex;flex-direction:column;gap:6px;}
+.kpi-val{font-size:32px;font-weight:900;letter-spacing:-1px;line-height:1;}
+.kpi-lbl{font-size:12px;color:var(--text2);font-weight:500;}
+.kpi-sub{font-size:11px;color:var(--text3);}
+.kpi-jp .kpi-val{color:var(--jp);}
+.kpi-ar .kpi-val{color:var(--ar);}
+
+/* INSIGHT CARDS */
+.insight-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;border-left:3px solid;}
+.insight-card.jp-border{border-left-color:var(--jp);}
+.insight-card.ar-border{border-left-color:var(--ar);}
+.insight-icon{font-size:24px;margin-bottom:10px;}
+.insight-title{font-size:14px;font-weight:700;margin-bottom:6px;}
+.insight-text{font-size:13px;color:var(--text2);line-height:1.6;}
+.insight-highlight{color:var(--jp);font-weight:700;}
+.ar-highlight{color:var(--ar);font-weight:700;}
+
+/* SECTION DIVIDER */
+.section-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin:40px 0 20px;display:flex;align-items:center;gap:12px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* CHARTS */
+.chart-wrap{position:relative;width:100%;height:280px;}
+.chart-wrap.tall{height:360px;}
+.chart-wrap.short{height:200px;}
+
+/* HEATMAP */
+.heatmap-container{overflow-x:auto;}
+.heatmap-grid{display:grid;grid-template-columns:44px repeat(24,1fr);gap:2px;min-width:600px;}
+.heatmap-hour-label{font-size:9px;color:var(--text3);text-align:center;padding:2px 0;grid-row:1;}
+.heatmap-day-label{font-size:11px;color:var(--text2);font-weight:600;display:flex;align-items:center;padding-right:6px;}
+.heatmap-cell{height:28px;border-radius:3px;cursor:pointer;transition:opacity .15s,transform .15s;position:relative;}
+.heatmap-cell:hover{opacity:0.8;transform:scale(1.1);z-index:10;}
+.tooltip-hm{position:fixed;background:rgba(0,0,0,0.9);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:6px;font-size:12px;pointer-events:none;z-index:999;display:none;}
+
+/* TOP LISTS */
+.top-list{display:flex;flex-direction:column;gap:8px;}
+.top-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card2);border-radius:var(--radius-sm);transition:background .2s;}
+.top-item:hover{background:#2a2a2a;}
+.top-rank{font-size:13px;font-weight:700;color:var(--text3);width:24px;flex-shrink:0;text-align:center;}
+.top-rank.gold{color:var(--gold);}
+.top-rank.silver{color:#9ca3af;}
+.top-rank.bronze{color:#b45309;}
+.top-info{flex:1;min-width:0;}
+.top-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.top-sub{font-size:12px;color:var(--text3);margin-top:1px;}
+.top-bar-wrap{width:120px;flex-shrink:0;}
+.top-bar-bg{height:4px;background:#333;border-radius:2px;overflow:hidden;}
+.top-bar-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+.top-hours{font-size:12px;color:var(--text2);font-weight:600;width:52px;text-align:right;flex-shrink:0;}
+
+/* DONUT LEGENDS */
+.donut-wrap{display:flex;gap:24px;align-items:center;}
+.donut-canvas{width:140px;height:140px;flex-shrink:0;}
+.donut-legend{display:flex;flex-direction:column;gap:10px;flex:1;}
+.legend-item{display:flex;align-items:center;gap:8px;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.legend-label{font-size:13px;color:var(--text2);}
+.legend-val{font-size:13px;font-weight:700;margin-left:auto;}
+
+/* COMPARE SECTION */
+.vs-banner{background:linear-gradient(135deg,rgba(29,185,84,0.1),rgba(232,17,156,0.1));border:1px solid var(--border);border-radius:16px;padding:32px;display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:40px;}
+.vs-person{text-align:center;flex:1;}
+.vs-person-name{font-size:18px;font-weight:800;}
+.vs-person-sub{font-size:12px;color:var(--text3);margin-top:4px;}
+.vs-divider{font-size:36px;font-weight:900;color:var(--text3);}
+.vs-stat-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:16px;}
+.vs-stat-val{font-size:20px;font-weight:800;}
+.vs-stat-val.jp-c{color:var(--jp);}
+.vs-stat-val.ar-c{color:var(--ar);}
+.vs-stat-lbl{font-size:10px;color:var(--text3);text-align:center;letter-spacing:0.5px;text-transform:uppercase;}
+.vs-stat-bar{width:8px;height:8px;border-radius:50%;background:var(--border);}
+
+/* RADAR */
+.radar-wrap{display:flex;gap:32px;align-items:center;flex-wrap:wrap;}
+.radar-chart{width:320px;height:320px;flex-shrink:0;}
+.radar-legend{flex:1;min-width:200px;}
+.radar-dim{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2a2a;}
+.radar-dim:last-child{border-bottom:none;}
+.radar-dim-name{font-size:13px;color:var(--text2);flex:1;}
+.radar-bars{display:flex;gap:4px;align-items:center;}
+.r-bar{height:8px;border-radius:2px;}
+
+/* COMPARISON TABLE */
+.compare-table{width:100%;border-collapse:collapse;}
+.compare-table th,.compare-table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);}
+.compare-table th{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);font-weight:600;}
+.compare-table td:first-child{color:var(--text2);font-size:13px;}
+.compare-table td.jp-val{color:var(--jp);font-weight:700;font-size:14px;}
+.compare-table td.ar-val{color:var(--ar);font-weight:700;font-size:14px;}
+.compare-table tr:hover td{background:rgba(255,255,255,0.02);}
+.winner{font-size:10px;padding:2px 6px;border-radius:10px;font-weight:700;margin-left:6px;vertical-align:middle;}
+.winner.jp{background:var(--jp-a);color:var(--jp);}
+.winner.ar{background:var(--ar-a);color:var(--ar);}
+
+/* TAG */
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.5px;padding:3px 8px;border-radius:20px;text-transform:uppercase;}
+.tag.jp{background:var(--jp-a);color:var(--jp);}
+.tag.ar{background:var(--ar-a);color:var(--ar);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--surface);}
+::-webkit-scrollbar-thumb{background:#444;border-radius:3px;}
+
+/* mb utility */
+.mb8{margin-bottom:8px;}.mb16{margin-bottom:16px;}.mb24{margin-bottom:24px;}.mb32{margin-bottom:32px;}.mt24{margin-top:24px;}
+
+@media(max-width:700px){.hero-name{font-size:36px;}.hero-stats{gap:24px;}.hero-stat-val{font-size:28px;}.vs-banner{flex-direction:column;}.vs-divider{display:none;}}
+</style>
+</head>
+<body>
+
+<div class="tooltip-hm" id="hmTooltip"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      Spotify Analytics
+    </div>
+    <div class="nav-tabs">
+      <button class="tab-btn jp active" id="tab-jp" onclick="showTab('jp')"><i class="fa-solid fa-guitar" style="margin-right:6px;font-size:12px"></i>Juan Pablo</button>
+      <button class="tab-btn ar" id="tab-ar" onclick="showTab('ar')"><i class="fa-solid fa-heart" style="margin-right:6px;font-size:12px"></i>Aranza</button>
+      <button class="tab-btn cmp" id="tab-cmp" onclick="showTab('cmp')"><i class="fa-solid fa-code-compare" style="margin-right:6px;font-size:12px"></i>Comparativa</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================ JP SECTION -->
+<div class="section active" id="section-jp">
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Perfil de Escucha · Ago 2015 – Ene 2026</div>
+    <div class="hero-name jp-gradient">Juan Pablo Orihuela Araiza</div>
+    <div class="hero-sub">10 años de datos, un catálogo de rock alternativo, y una obsesión con Twenty One Pilots que desafía toda estadística.</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val" style="color:var(--jp)" id="jp-hrs-hero">0</div><div class="hero-stat-lbl">Horas totales</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" style="color:#e879f9" id="jp-days-hero">0</div><div class="hero-stat-lbl">Días escuchando</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" style="color:#60a5fa" id="jp-artists-hero">0</div><div class="hero-stat-lbl">Artistas únicos</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" style="color:#fb923c" id="jp-tracks-hero">0</div><div class="hero-stat-lbl">Canciones únicas</div></div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="section-label"><i class="fa-solid fa-gauge-high" style="color:var(--jp)"></i>Métricas clave</div>
+  <div class="grid-4 mb32">
+    <div class="kpi-card kpi-jp"><div class="kpi-val">27.5%</div><div class="kpi-lbl">Tasa de salto</div><div class="kpi-sub">1 de cada 4 canciones saltadas</div></div>
+    <div class="kpi-card kpi-jp"><div class="kpi-val">11,830</div><div class="kpi-lbl">Sesiones de escucha</div><div class="kpi-sub">Promedio: 23.9 min por sesión</div></div>
+    <div class="kpi-card kpi-jp"><div class="kpi-val">14 hrs</div><div class="kpi-lbl">Hora pico</div><div class="kpi-sub">Martes es su día favorito</div></div>
+    <div class="kpi-card kpi-jp"><div class="kpi-val">8.62%</div><div class="kpi-lbl">Concentración en TOP1</div><div class="kpi-sub">Twenty One Pilots domina</div></div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="section-label"><i class="fa-solid fa-chart-line" style="color:var(--jp)"></i>Evolución mensual de escucha</div>
+  <div class="card mb24">
+    <div class="card-title"><i class="fa-solid fa-calendar-days" style="color:var(--jp)"></i>Horas por mes · 2015–2026</div>
+    <div class="chart-wrap tall"><canvas id="chart-jp-timeline"></canvas></div>
+  </div>
+
+  <!-- HOURLY + HEATMAP -->
+  <div class="grid-2 mb24">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-clock" style="color:var(--jp)"></i>Patrón por hora del día</div>
+      <div class="chart-wrap"><canvas id="chart-jp-hourly"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-fire" style="color:var(--jp)"></i>Skip rate por hora</div>
+      <div class="chart-wrap"><canvas id="chart-jp-skiprate"></canvas></div>
+    </div>
+  </div>
+
+  <!-- HEATMAP -->
+  <div class="card mb24">
+    <div class="card-title"><i class="fa-solid fa-th" style="color:var(--jp)"></i>Heatmap: Día × Hora (horas de escucha)</div>
+    <div class="heatmap-container" id="heatmap-jp"></div>
+  </div>
+
+  <!-- TOP ARTISTS + TRACKS -->
+  <div class="grid-2 mb24">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-star" style="color:var(--jp)"></i>Top 10 artistas</div>
+      <div class="chart-wrap tall"><canvas id="chart-jp-artists"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-music" style="color:var(--jp)"></i>Top 10 canciones</div>
+      <div class="top-list" id="list-jp-tracks"></div>
+    </div>
+  </div>
+
+  <!-- COMPLETION + PLATFORMS -->
+  <div class="grid-2 mb24">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-chart-pie" style="color:var(--jp)"></i>Completitud de canciones</div>
+      <div class="donut-wrap mt24">
+        <canvas class="donut-canvas" id="chart-jp-completion"></canvas>
+        <div class="donut-legend" id="legend-jp-completion"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-mobile" style="color:var(--jp)"></i>Plataformas de uso</div>
+      <div class="donut-wrap mt24">
+        <canvas class="donut-canvas" id="chart-jp-platforms"></canvas>
+        <div class="donut-legend" id="legend-jp-platforms"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="section-label"><i class="fa-solid fa-lightbulb" style="color:var(--jp)"></i>Hallazgos profundos</div>
+  <div class="grid-3">
+    <div class="insight-card jp-border">
+      <div class="insight-icon">🚀</div>
+      <div class="insight-title">El Año Explosivo de 2025</div>
+      <div class="insight-text">Juan Pablo escuchó <span class="insight-highlight">1,313 horas en 2025</span> — casi el triple de su promedio histórico. Solo en noviembre 2025 acumuló <span class="insight-highlight">277 horas</span>: el equivalente a 9.2 horas de música cada día del mes.</div>
+    </div>
+    <div class="insight-card jp-border">
+      <div class="insight-icon">💚</div>
+      <div class="insight-title">La Devoción Twenty One Pilots</div>
+      <div class="insight-text">Con <span class="insight-highlight">406 horas y 10,591 reproducciones</span>, Twenty One Pilots ocupa el 8.62% de TODA su escucha. Sus siguientes 9 artistas juntos apenas igualan esa cifra. Una lealtad sin paralelo.</div>
+    </div>
+    <div class="insight-card jp-border">
+      <div class="insight-icon">⏩</div>
+      <div class="insight-title">El Skipeador Selectivo</div>
+      <div class="insight-text">Su <span class="insight-highlight">27.5% de skip rate</span> es revelador: entre las 7-10 AM su tasa de salto dispara a 45-48%, mientras que de madrugada (1-5 AM) casi no salta. Escucha con atención cuando puede.</div>
+    </div>
+    <div class="insight-card jp-border">
+      <div class="insight-icon">🎸</div>
+      <div class="insight-title">El Universo Rock Alternativo</div>
+      <div class="insight-text">Su top 20 es un manifiesto: Twenty One Pilots, The 1975, The Killers, Gorillaz, Muse, MCR, Linkin Park, Arctic Monkeys. <span class="insight-highlight">Rock alternativo e indie</span> dominan sobre el 80% del tiempo total.</div>
+    </div>
+    <div class="insight-card jp-border">
+      <div class="insight-icon">📱</div>
+      <div class="insight-title">Un Oyente Móvil Total</div>
+      <div class="insight-text">El <span class="insight-highlight">87.1% de su escucha es desde iPhone</span>. Solo el 3.1% en Windows. Escucha en movimiento, no en casa frente a una pantalla. Sus picos de 2PM-4PM confirman escucha en desplazamientos o trabajo.</div>
+    </div>
+    <div class="insight-card jp-border">
+      <div class="insight-icon">🌙</div>
+      <div class="insight-title">La Anomalía Nocturna</div>
+      <div class="insight-text">Aunque su pico es a las 2PM, tiene notable actividad de <span class="insight-highlight">1-2 AM</span> (237 horas). Su skip rate nocturno es mínimo (3-5%), lo que sugiere sesiones contemplativas profundas en la madrugada.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ============================================================ ARANZA SECTION -->
+<div class="section" id="section-ar">
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Perfil de Escucha · Ene 2015 – May 2026</div>
+    <div class="hero-name ar-gradient">Aranza Romo Lima</div>
+    <div class="hero-sub">11 años de datos, más de 380 días de música ininterrumpida, y el corazón en el pop latino. La más dedicada escuchadora.</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val" style="color:var(--ar)" id="ar-hrs-hero">0</div><div class="hero-stat-lbl">Horas totales</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" style="color:#e879f9" id="ar-days-hero">0</div><div class="hero-stat-lbl">Días escuchando</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" style="color:#60a5fa" id="ar-artists-hero">0</div><div class="hero-stat-lbl">Artistas únicos</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" style="color:#fb923c" id="ar-tracks-hero">0</div><div class="hero-stat-lbl">Canciones únicas</div></div>
+    </div>
+  </div>
+
+  <div class="section-label"><i class="fa-solid fa-gauge-high" style="color:var(--ar)"></i>Métricas clave</div>
+  <div class="grid-4 mb32">
+    <div class="kpi-card kpi-ar"><div class="kpi-val">15.9%</div><div class="kpi-lbl">Tasa de salto</div><div class="kpi-sub">Escucha lo que pone</div></div>
+    <div class="kpi-card kpi-ar"><div class="kpi-val">17,300</div><div class="kpi-lbl">Sesiones de escucha</div><div class="kpi-sub">Promedio: 31.7 min por sesión</div></div>
+    <div class="kpi-card kpi-ar"><div class="kpi-val">18 hrs</div><div class="kpi-lbl">Hora pico</div><div class="kpi-sub">Viernes es su día favorito</div></div>
+    <div class="kpi-card kpi-ar"><div class="kpi-val">63.3%</div><div class="kpi-lbl">Canciones completadas</div><div class="kpi-sub">Escuchadora comprometida</div></div>
+  </div>
+
+  <div class="section-label"><i class="fa-solid fa-chart-line" style="color:var(--ar)"></i>Evolución mensual de escucha</div>
+  <div class="card mb24">
+    <div class="card-title"><i class="fa-solid fa-calendar-days" style="color:var(--ar)"></i>Horas por mes · 2015–2026</div>
+    <div class="chart-wrap tall"><canvas id="chart-ar-timeline"></canvas></div>
+  </div>
+
+  <div class="grid-2 mb24">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-clock" style="color:var(--ar)"></i>Patrón por hora del día</div>
+      <div class="chart-wrap"><canvas id="chart-ar-hourly"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-fire" style="color:var(--ar)"></i>Skip rate por hora</div>
+      <div class="chart-wrap"><canvas id="chart-ar-skiprate"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card mb24">
+    <div class="card-title"><i class="fa-solid fa-th" style="color:var(--ar)"></i>Heatmap: Día × Hora (horas de escucha)</div>
+    <div class="heatmap-container" id="heatmap-ar"></div>
+  </div>
+
+  <div class="grid-2 mb24">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-star" style="color:var(--ar)"></i>Top 10 artistas</div>
+      <div class="chart-wrap tall"><canvas id="chart-ar-artists"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-music" style="color:var(--ar)"></i>Top 10 canciones</div>
+      <div class="top-list" id="list-ar-tracks"></div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb24">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-chart-pie" style="color:var(--ar)"></i>Completitud de canciones</div>
+      <div class="donut-wrap mt24">
+        <canvas class="donut-canvas" id="chart-ar-completion"></canvas>
+        <div class="donut-legend" id="legend-ar-completion"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-mobile" style="color:var(--ar)"></i>Plataformas de uso</div>
+      <div class="donut-wrap mt24">
+        <canvas class="donut-canvas" id="chart-ar-platforms"></canvas>
+        <div class="donut-legend" id="legend-ar-platforms"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label"><i class="fa-solid fa-lightbulb" style="color:var(--ar)"></i>Hallazgos profundos</div>
+  <div class="grid-3">
+    <div class="insight-card ar-border">
+      <div class="insight-icon">🏆</div>
+      <div class="insight-title">La Maratonista del Streaming</div>
+      <div class="insight-text">Con <span class="ar-highlight">9,142 horas acumuladas</span>, Aranza ha escuchado música el equivalente a 380 días continuos — más de un año entero sin parar. A un promedio de <span class="ar-highlight">2.32 horas cada día activo</span>.</div>
+    </div>
+    <div class="insight-card ar-border">
+      <div class="insight-icon">🦠</div>
+      <div class="insight-title">El Boom COVID de 2020</div>
+      <div class="insight-text">Su año más intenso fue <span class="ar-highlight">2020 con 1,138 horas</span>. Solo marzo-abril sumaron 252 horas — el confinamiento la convirtió en una escuchadora compulsiva. La música fue su escape durante la pandemia.</div>
+    </div>
+    <div class="insight-card ar-border">
+      <div class="insight-icon">✅</div>
+      <div class="insight-title">La Completista Comprometida</div>
+      <div class="insight-text">Solo el <span class="ar-highlight">15.9% de saltos</span> y un 63.3% de canciones escuchadas completas. Aranza no pone música aleatoriamente — escoge con intención y se queda hasta el final. Su comportamiento opuesto al de JP.</div>
+    </div>
+    <div class="insight-card ar-border">
+      <div class="insight-icon">🌅</div>
+      <div class="insight-title">Viernes a las 6 PM: Su Momento</div>
+      <div class="insight-text">El patrón es inequívoco: los <span class="ar-highlight">viernes de 18:00</span> registran su máximo absoluto (125.96 hrs acumuladas en esa celda). Aranza tiene rituales de música muy claros ligados al inicio del fin de semana.</div>
+    </div>
+    <div class="insight-card ar-border">
+      <div class="insight-icon">📱</div>
+      <div class="insight-title">La Oyente del iPad</div>
+      <div class="insight-text">El <span class="ar-highlight">12.2% de su escucha es desde iPad</span> vs solo 4.2% de JP. Esto sugiere más tiempo de escucha en casa, sofá, cocina. Además, sus sesiones de 31.7 min refuerzan la idea de listening sedentario y concentrado.</div>
+    </div>
+    <div class="insight-card ar-border">
+      <div class="insight-icon">🎵</div>
+      <div class="insight-title">Pop Latino y más: Un Universo Diverso</div>
+      <div class="insight-text">Morat, Justin Bieber, Danny Ocean, TINI, Bad Bunny, Ariana Grande, Reik, Cristian Castro — <span class="ar-highlight">diversidad total</span> entre pop latino, urbano y pop anglosajón. Su top 10 artista solo tiene 3.59% del total, vs 8.62% de JP.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ============================================================ COMPARE SECTION -->
+<div class="section" id="section-cmp">
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Análisis Comparativo</div>
+    <div class="hero-name" style="background:linear-gradient(135deg,#1DB954 40%,#E8119C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">JP vs Aranza</div>
+    <div class="hero-sub">Dos estilos de escucha radicalmente distintos, revelados a través de 10 años de datos combinados.</div>
+  </div>
+
+  <!-- VS BANNER -->
+  <div class="vs-banner mb32">
+    <div class="vs-person">
+      <div class="vs-person-name" style="color:var(--jp)">Juan Pablo</div>
+      <div class="vs-person-sub">Ago 2015 – Ene 2026</div>
+      <div style="margin-top:12px;font-size:42px;font-weight:900;color:var(--jp)">4,716 h</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">horas totales</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="vs-divider">VS</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:8px;max-width:120px">13,858 horas combinadas = 577 días de música</div>
+    </div>
+    <div class="vs-person">
+      <div class="vs-person-name" style="color:var(--ar)">Aranza</div>
+      <div class="vs-person-sub">Ene 2015 – May 2026</div>
+      <div style="margin-top:12px;font-size:42px;font-weight:900;color:var(--ar)">9,142 h</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">horas totales</div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TIMELINE -->
+  <div class="section-label"><i class="fa-solid fa-chart-line"></i>Evolución comparada de escucha mensual</div>
+  <div class="card mb24">
+    <div class="card-title"><i class="fa-solid fa-arrows-left-right"></i>Horas por mes · JP (verde) vs Aranza (rosa) · 2015–2026</div>
+    <div class="chart-wrap tall"><canvas id="chart-cmp-timeline"></canvas></div>
+  </div>
+
+  <!-- HOURLY COMPARE -->
+  <div class="section-label"><i class="fa-solid fa-clock"></i>Patrones temporales</div>
+  <div class="grid-2 mb24">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-sun"></i>Distribución por hora del día</div>
+      <div class="chart-wrap"><canvas id="chart-cmp-hourly"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-calendar-week"></i>Distribución por día de la semana</div>
+      <div class="chart-wrap"><canvas id="chart-cmp-weekday"></canvas></div>
+    </div>
+  </div>
+
+  <!-- RADAR -->
+  <div class="section-label"><i class="fa-solid fa-spider-web"></i>Perfil de comportamiento</div>
+  <div class="card mb24">
+    <div class="card-title"><i class="fa-solid fa-chart-radar"></i>Radar de dimensiones de escucha (0–100, normalizado)</div>
+    <div class="radar-wrap mt24">
+      <canvas style="width:320px;height:320px;" id="chart-cmp-radar"></canvas>
+      <div class="radar-legend">
+        <div style="margin-bottom:16px;">
+          <div style="display:flex;gap:16px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--jp)"></div><span style="font-size:13px;color:var(--text2)">Juan Pablo</span></div>
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:12px;height:12px;border-radius:2px;background:var(--ar)"></div><span style="font-size:13px;color:var(--text2)">Aranza</span></div>
+          </div>
+        </div>
+        <div class="radar-dim">
+          <div class="radar-dim-name">Volumen total</div>
+          <div class="radar-bars"><div class="r-bar" style="width:52px;background:var(--jp);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--jp);width:26px;text-align:right">51.6</div>
+          <div style="width:16px"></div>
+          <div class="radar-bars"><div class="r-bar" style="width:100px;background:var(--ar);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--ar);width:26px;text-align:right">100</div>
+        </div>
+        <div class="radar-dim">
+          <div class="radar-dim-name">Diversidad artistas</div>
+          <div class="radar-bars"><div class="r-bar" style="width:100px;background:var(--jp);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--jp);width:26px;text-align:right">100</div>
+          <div style="width:16px"></div>
+          <div class="radar-bars"><div class="r-bar" style="width:93px;background:var(--ar);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--ar);width:26px;text-align:right">92.9</div>
+        </div>
+        <div class="radar-dim">
+          <div class="radar-dim-name">Engagement (1-skip%)</div>
+          <div class="radar-bars"><div class="r-bar" style="width:72px;background:var(--jp);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--jp);width:26px;text-align:right">72.5</div>
+          <div style="width:16px"></div>
+          <div class="radar-bars"><div class="r-bar" style="width:84px;background:var(--ar);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--ar);width:26px;text-align:right">84.1</div>
+        </div>
+        <div class="radar-dim">
+          <div class="radar-dim-name">Duración sesión</div>
+          <div class="radar-bars"><div class="r-bar" style="width:75px;background:var(--jp);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--jp);width:26px;text-align:right">75.4</div>
+          <div style="width:16px"></div>
+          <div class="radar-bars"><div class="r-bar" style="width:100px;background:var(--ar);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--ar);width:26px;text-align:right">100</div>
+        </div>
+        <div class="radar-dim">
+          <div class="radar-dim-name">Lealtad a artista TOP</div>
+          <div class="radar-bars"><div class="r-bar" style="width:100px;background:var(--jp);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--jp);width:26px;text-align:right">100</div>
+          <div style="width:16px"></div>
+          <div class="radar-bars"><div class="r-bar" style="width:42px;background:var(--ar);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--ar);width:26px;text-align:right">41.6</div>
+        </div>
+        <div class="radar-dim">
+          <div class="radar-dim-name">Intensidad diaria</div>
+          <div class="radar-bars"><div class="r-bar" style="width:61px;background:var(--jp);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--jp);width:26px;text-align:right">61.2</div>
+          <div style="width:16px"></div>
+          <div class="radar-bars"><div class="r-bar" style="width:100px;background:var(--ar);opacity:0.8"></div></div>
+          <div style="font-size:11px;color:var(--ar);width:26px;text-align:right">100</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="section-label"><i class="fa-solid fa-table"></i>Tabla comparativa detallada</div>
+  <div class="card mb24">
+    <table class="compare-table">
+      <thead><tr><th>Métrica</th><th style="color:var(--jp)"><i class="fa-solid fa-guitar"></i> Juan Pablo</th><th style="color:var(--ar)"><i class="fa-solid fa-heart"></i> Aranza</th><th>Diferencia</th></tr></thead>
+      <tbody>
+        <tr><td>Horas totales</td><td class="jp-val">4,716 h</td><td class="ar-val">9,142 h <span class="winner ar">+94%</span></td><td style="color:var(--text3);font-size:13px">Aranza escucha casi el doble</td></tr>
+        <tr><td>Días de escucha</td><td class="jp-val">196.5 días</td><td class="ar-val">380.9 días <span class="winner ar">+94%</span></td><td style="color:var(--text3);font-size:13px">Equivale a +184 días más</td></tr>
+        <tr><td>Artistas únicos</td><td class="jp-val">2,864 <span class="winner jp">+7.6%</span></td><td class="ar-val">2,662</td><td style="color:var(--text3);font-size:13px">JP ligeramente más diverso</td></tr>
+        <tr><td>Canciones únicas</td><td class="jp-val">7,993</td><td class="ar-val">9,763 <span class="winner ar">+22%</span></td><td style="color:var(--text3);font-size:13px">Aranza exploró más canciones</td></tr>
+        <tr><td>Tasa de salto</td><td class="jp-val">27.51%</td><td class="ar-val">15.88% <span class="winner ar">mejor</span></td><td style="color:var(--text3);font-size:13px">JP salta 1.73x más canciones</td></tr>
+        <tr><td>Sesiones totales</td><td class="jp-val">11,830</td><td class="ar-val">17,300 <span class="winner ar">+46%</span></td><td style="color:var(--text3);font-size:13px">Aranza inicia más sesiones</td></tr>
+        <tr><td>Duración prom. sesión</td><td class="jp-val">23.9 min</td><td class="ar-val">31.7 min <span class="winner ar">+33%</span></td><td style="color:var(--text3);font-size:13px">Sesiones más largas en Aranza</td></tr>
+        <tr><td>Tracks/sesión promedio</td><td class="jp-val">14.65</td><td class="ar-val">13.87</td><td style="color:var(--text3);font-size:13px">Similar ritmo por sesión</td></tr>
+        <tr><td>% hora pico</td><td class="jp-val">14:00 hrs</td><td class="ar-val">18:00 hrs</td><td style="color:var(--text3);font-size:13px">Tarde vs tarde-noche</td></tr>
+        <tr><td>Día favorito</td><td class="jp-val">Martes</td><td class="ar-val">Viernes</td><td style="color:var(--text3);font-size:13px">Entre semana vs fin de semana</td></tr>
+        <tr><td>% canciones completas</td><td class="jp-val">~40%</td><td class="ar-val">63.3% <span class="winner ar">+23 pts</span></td><td style="color:var(--text3);font-size:13px">Aranza escucha completo</td></tr>
+        <tr><td>TOP artista (% total)</td><td class="jp-val">8.62% <span class="winner jp">más leal</span></td><td class="ar-val">3.59%</td><td style="color:var(--text3);font-size:13px">JP más concentrado</td></tr>
+        <tr><td>iPad usage</td><td class="jp-val">4.2%</td><td class="ar-val">12.2% <span class="winner ar">+3x</span></td><td style="color:var(--text3);font-size:13px">Aranza escucha más en casa</td></tr>
+        <tr><td>Año pico</td><td class="jp-val">2025</td><td class="ar-val">2020</td><td style="color:var(--text3);font-size:13px">JP crece, Aranza se asentó</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- COMPARE INSIGHTS -->
+  <div class="section-label"><i class="fa-solid fa-magnifying-glass-chart"></i>Conclusiones cruzadas</div>
+  <div class="grid-2">
+    <div class="insight-card" style="border-left-color:#60a5fa">
+      <div class="insight-icon">🔬</div>
+      <div class="insight-title">Dos Perfiles Opuestos</div>
+      <div class="insight-text">JP es el <strong style="color:var(--jp)">oyente selectivo intenso</strong>: ama profundamente lo que ama, salta lo demás. Aranza es la <strong style="color:var(--ar)">oyente maratonista comprometida</strong>: escucha más, más seguido, y casi todo completo. Ninguno es "mejor" — son filosofías distintas de consumir música.</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#a78bfa">
+      <div class="insight-icon">📅</div>
+      <div class="insight-title">Hitos Temporales Opuestos</div>
+      <div class="insight-text">El evento que más impactó a Aranza fue el <strong style="color:var(--ar)">COVID-19 (2020)</strong>: confinamiento = más música. JP tiene el fenómeno inverso: su <strong style="color:var(--jp)">auge llegó en 2025</strong>, décadas después de iniciar. Dos curvas que nunca se cruzaron.</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#34d399">
+      <div class="insight-icon">🌍</div>
+      <div class="insight-title">Géneros Sin Intersección</div>
+      <div class="insight-text">Rock alternativo indie (JP) vs Pop latino/internacional (Aranza). De los 20 artistas principales de cada uno, <strong>ninguno aparece en ambas listas</strong>. Viven en universos musicales completamente paralelos, a pesar de compartir datos del mismo proyecto.</div>
+    </div>
+    <div class="insight-card" style="border-left-color:#fbbf24">
+      <div class="insight-icon">⏰</div>
+      <div class="insight-title">Cronotipos Musicales Distintos</div>
+      <div class="insight-text">JP: pico a las <strong style="color:var(--jp)">14:00 los martes</strong>, patrón de tarde laboral. Aranza: pico a las <strong style="color:var(--ar)">18:00 los viernes</strong>, patrón de transición fin de semana. Sus heatmaps muestran ritmos de vida completamente diferentes.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const JP_DATA = {
+  monthly: {"2015-08":0.0,"2015-10":4.39,"2015-11":4.17,"2015-12":1.84,"2016-01":6.34,"2016-02":5.78,"2016-03":5.33,"2016-04":6.24,"2016-05":9.63,"2016-06":6.16,"2016-07":2.80,"2016-08":4.49,"2016-09":13.67,"2016-10":11.71,"2016-11":55.53,"2016-12":27.52,"2017-01":5.82,"2017-02":10.43,"2017-03":6.29,"2017-04":7.76,"2017-05":17.05,"2017-06":10.57,"2017-07":3.72,"2017-08":5.67,"2017-09":6.87,"2017-10":1.73,"2017-11":4.86,"2017-12":5.48,"2018-01":17.66,"2018-02":3.63,"2018-03":2.88,"2018-04":24.65,"2018-05":49.20,"2018-06":41.67,"2018-07":21.09,"2018-08":15.61,"2018-09":19.90,"2018-10":49.43,"2018-11":54.00,"2018-12":70.48,"2019-01":42.64,"2019-02":35.16,"2019-03":28.45,"2019-04":32.09,"2019-05":36.32,"2019-06":36.83,"2019-07":58.98,"2019-08":23.59,"2019-09":44.29,"2019-10":62.99,"2019-11":27.34,"2019-12":25.60,"2020-01":17.32,"2020-02":19.93,"2020-03":20.85,"2020-04":19.70,"2020-05":17.15,"2020-06":25.79,"2020-07":21.37,"2020-08":21.17,"2020-09":23.49,"2020-10":30.00,"2020-11":43.92,"2020-12":39.11,"2021-01":24.21,"2021-02":22.26,"2021-03":28.78,"2021-04":29.72,"2021-05":34.43,"2021-06":27.16,"2021-07":23.41,"2021-08":19.09,"2021-09":16.95,"2021-10":19.24,"2021-11":27.27,"2021-12":20.31,"2022-01":24.82,"2022-02":22.82,"2022-03":27.24,"2022-04":35.77,"2022-05":35.01,"2022-06":35.50,"2022-07":47.91,"2022-08":40.91,"2022-09":43.41,"2022-10":54.64,"2022-11":42.68,"2022-12":43.45,"2023-01":28.83,"2023-02":45.33,"2023-03":44.92,"2023-04":29.81,"2023-05":47.37,"2023-06":53.21,"2023-07":81.99,"2023-08":55.40,"2023-09":51.89,"2023-10":47.73,"2023-11":44.37,"2023-12":62.86,"2024-01":53.37,"2024-02":29.99,"2024-03":46.50,"2024-04":37.05,"2024-05":47.85,"2024-06":46.45,"2024-07":36.05,"2024-08":54.97,"2024-09":73.91,"2024-10":47.95,"2024-11":138.14,"2024-12":41.99,"2025-01":111.16,"2025-02":81.81,"2025-03":49.84,"2025-04":30.92,"2025-05":39.77,"2025-06":37.56,"2025-07":49.00,"2025-08":178.90,"2025-09":240.35,"2025-10":181.46,"2025-11":277.72,"2025-12":35.49,"2026-01":31.01},
+  hourlyHours:[195.59,237.14,185.86,111.64,74.75,64.39,89.34,100.71,133.18,164.35,150.88,181.35,255.50,310.06,330.11,287.21,238.69,234.00,243.35,219.05,244.17,259.33,238.25,167.17],
+  hourlySkip:[11.36,5.35,3.38,6.12,1.87,0.10,27.33,48.38,45.64,44.20,42.95,27.32,26.88,30.41,33.42,34.61,41.18,35.68,34.66,34.41,26.87,26.79,32.09,30.09],
+  weekdayHours:[681.8,726.43,652.12,686.73,717.64,640.6,610.71],
+  heatmap:[
+    [30.59,35.60,30.62,18.11,14.57,14.30,14.86,20.83,26.63,26.94,22.14,25.01,37.52,37.41,35.40,41.57,26.57,26.82,32.99,32.15,36.63,35.26,33.75,25.53],
+    [30.91,33.63,26.12,17.67,11.84,10.95,25.74,18.07,23.73,26.19,22.06,31.29,42.38,52.89,47.46,33.31,25.83,25.88,40.36,31.09,37.72,48.10,38.60,24.59],
+    [27.88,32.81,22.87,12.15,8.05,7.19,14.93,18.92,24.55,21.16,25.69,23.66,33.96,39.82,46.43,36.93,34.19,31.43,30.59,30.21,28.10,36.61,41.68,22.29],
+    [28.78,32.57,26.88,16.07,10.98,8.36,10.16,16.18,20.08,35.21,22.27,23.11,27.58,40.13,42.25,38.30,33.16,37.99,35.87,31.04,40.07,43.92,41.01,24.76],
+    [31.52,39.05,25.55,16.14,11.46,10.47,12.66,13.24,17.20,22.12,25.56,34.14,45.90,51.21,54.38,38.62,34.94,42.02,37.15,33.38,37.89,30.53,31.32,21.20],
+    [26.80,30.93,26.56,13.47,6.02,4.80,4.82,5.88,13.06,21.85,21.68,25.53,34.98,48.90,63.05,57.09,42.02,31.18,33.71,29.58,28.07,25.47,24.25,20.88],
+    [19.10,32.54,27.26,18.03,11.83,8.32,6.16,7.60,7.91,10.87,11.49,18.60,33.19,39.71,41.14,41.37,41.96,38.67,32.67,31.60,35.69,39.44,27.64,27.91]
+  ],
+  topArtists:[
+    {n:'Twenty One Pilots',h:406.43,p:10591},{n:'The 1975',h:149.93,p:3966},{n:'The Killers',h:144.35,p:4369},{n:'Gorillaz',h:103.58,p:4891},{n:'Little Jesus',h:93.51,p:2680},{n:'Muse',h:89.89,p:2846},{n:'My Chemical Romance',h:86.77,p:2251},{n:'The Lumineers',h:78.27,p:3778},{n:'Linkin Park',h:72.61,p:1932},{n:'Måneskin',h:66.68,p:1892}
+  ],
+  topTracks:[
+    {t:'Car Radio',a:'Twenty One Pilots',h:18.44,p:363},{t:'Na Na Na (Na Na Na…)',a:'My Chemical Romance',h:16.31,p:457},{t:'Robbers',a:'The 1975',h:15.82,p:319},{t:'Mi Vida',a:'DLD',h:14.72,p:272},{t:'Paladin Strait',a:'Twenty One Pilots',h:14.60,p:209},{t:'TQM',a:'Little Jesus',h:14.40,p:245},{t:'Knights of Cydonia',a:'Muse',h:14.11,p:227},{t:'Welcome to the Black Parade',a:'My Chemical Romance',h:13.45,p:212},{t:'Redbone',a:'Childish Gambino',h:13.17,p:227},{t:'Psycho',a:'Muse',h:12.64,p:250}
+  ],
+  completion:[49213,71738,57958],
+  platforms:[{n:'iPhone / iOS',h:4107.08,p:87.09},{n:'iPad / iOS',h:196.26,p:4.16},{n:'Other',h:194.12,p:4.12},{n:'Windows',h:145.79,p:3.09},{n:'Android',h:69.09,p:1.46},{n:'Web',h:3.70,p:0.08}]
+};
+
+const AR_DATA = {
+  monthly:{"2015-01":1.29,"2015-02":4.16,"2015-03":31.19,"2015-04":18.67,"2015-05":31.04,"2015-06":9.04,"2015-07":10.12,"2015-08":25.99,"2015-09":20.42,"2015-10":9.36,"2015-11":35.30,"2015-12":47.29,"2016-01":82.67,"2016-02":79.69,"2016-03":42.19,"2016-04":74.11,"2016-05":54.78,"2016-06":34.64,"2016-07":49.88,"2016-08":26.77,"2016-09":35.20,"2016-10":23.19,"2016-11":24.11,"2016-12":32.55,"2017-01":22.76,"2017-02":17.67,"2017-03":27.95,"2017-04":29.86,"2017-05":33.21,"2017-06":33.41,"2017-07":52.32,"2017-08":49.27,"2017-09":47.88,"2017-10":63.86,"2017-11":46.62,"2017-12":58.36,"2018-01":52.68,"2018-02":37.95,"2018-03":42.51,"2018-04":40.99,"2018-05":38.45,"2018-06":58.60,"2018-07":74.96,"2018-08":61.14,"2018-09":61.30,"2018-10":86.78,"2018-11":103.12,"2018-12":87.16,"2019-01":93.54,"2019-02":98.34,"2019-03":109.75,"2019-04":91.06,"2019-05":112.47,"2019-06":95.75,"2019-07":96.55,"2019-08":75.80,"2019-09":78.25,"2019-10":81.37,"2019-11":79.36,"2019-12":118.07,"2020-01":80.30,"2020-02":91.18,"2020-03":132.83,"2020-04":119.86,"2020-05":101.93,"2020-06":80.87,"2020-07":103.09,"2020-08":71.78,"2020-09":92.95,"2020-10":84.49,"2020-11":102.59,"2020-12":76.22,"2021-01":83.16,"2021-02":73.62,"2021-03":89.16,"2021-04":84.61,"2021-05":68.74,"2021-06":76.00,"2021-07":42.51,"2021-08":37.90,"2021-09":29.88,"2021-10":39.30,"2021-11":39.57,"2021-12":60.88,"2022-01":57.13,"2022-02":60.43,"2022-03":54.78,"2022-04":57.61,"2022-05":59.70,"2022-06":72.18,"2022-07":74.05,"2022-08":46.02,"2022-09":74.19,"2022-10":71.14,"2022-11":93.78,"2022-12":99.81,"2023-01":99.59,"2023-02":111.46,"2023-03":90.04,"2023-04":75.79,"2023-05":96.30,"2023-06":88.36,"2023-07":90.90,"2023-08":78.80,"2023-09":107.28,"2023-10":104.15,"2023-11":91.61,"2023-12":73.25,"2024-01":102.97,"2024-02":81.78,"2024-03":80.75,"2024-04":56.30,"2024-05":98.26,"2024-06":77.33,"2024-07":53.57,"2024-08":97.36,"2024-09":101.46,"2024-10":83.44,"2024-11":83.96,"2024-12":77.70,"2025-01":71.95,"2025-02":78.65,"2025-03":76.96,"2025-04":76.50,"2025-05":93.51,"2025-06":47.88,"2025-07":40.14,"2025-08":61.54,"2025-09":78.98,"2025-10":88.85,"2025-11":66.72,"2025-12":52.28,"2026-01":69.09,"2026-02":68.29,"2026-03":80.83,"2026-04":89.00,"2026-05":51.85},
+  hourlyHours:[112.51,51.53,24.21,15.78,11.55,109.81,187.40,245.69,224.50,366.68,507.39,614.85,721.98,656.28,470.26,441.73,545.91,713.92,794.71,642.03,548.69,589.89,345.07,200.09],
+  hourlySkip:[9.63,16.38,15.37,24.42,20.00,31.18,22.38,22.27,20.60,21.64,23.14,20.71,16.99,15.58,15.12,15.15,15.06,13.60,11.94,15.63,13.83,11.52,11.22,8.03],
+  weekdayHours:[1239.67,1306.58,1361.43,1276.57,1388.82,1371.34,1198.04],
+  heatmap:[
+    [9.80,3.48,0.46,1.23,0.07,17.56,34.51,51.97,48.61,56.62,58.55,71.85,77.83,71.11,51.76,55.44,79.37,103.61,114.41,74.72,90.96,102.02,44.12,19.62],
+    [11.56,4.20,1.08,1.23,0.82,24.35,37.94,49.68,38.21,59.76,81.03,77.37,72.06,85.92,42.65,49.45,70.56,101.01,125.68,103.52,91.24,109.37,46.12,21.78],
+    [12.70,4.67,1.16,1.15,1.01,15.88,28.78,33.14,41.45,75.08,78.48,94.69,94.83,78.74,58.72,56.07,82.52,109.81,125.82,108.21,92.26,97.81,48.46,20.00],
+    [11.92,2.64,0.34,0.09,0.00,22.76,53.02,63.28,41.93,60.96,62.96,69.79,79.81,72.83,47.74,52.23,69.48,95.93,111.98,92.12,85.68,103.49,50.94,24.66],
+    [11.11,3.89,3.68,2.07,2.03,24.69,26.39,31.08,27.42,48.88,92.94,83.11,119.15,91.03,72.20,62.92,79.94,105.18,125.96,109.67,75.84,72.63,69.01,48.01],
+    [27.33,20.85,11.36,4.78,3.27,2.19,3.62,7.85,17.05,43.91,78.82,119.19,145.44,131.96,98.59,88.37,87.26,108.38,112.18,83.12,52.19,40.04,41.17,42.42],
+    [28.10,11.80,6.13,5.22,4.36,2.40,3.14,8.69,9.83,21.47,54.62,98.85,132.85,124.68,98.58,77.25,76.79,90.00,78.67,70.68,60.52,64.54,45.24,23.60]
+  ],
+  topArtists:[
+    {n:'Morat',h:328.25,p:7318},{n:'Justin Bieber',h:188.24,p:5085},{n:'Danny Ocean',h:172.83,p:4089},{n:'TINI',h:166.90,p:3989},{n:'The Weeknd',h:158.05,p:3261},{n:'Bad Bunny',h:148.09,p:3679},{n:'One Direction',h:139.20,p:3992},{n:'Ariana Grande',h:132.13,p:3088},{n:'Reik',h:120.68,p:3214},{n:'Cristian Castro',h:114.90,p:1960}
+  ],
+  topTracks:[
+    {t:'Déjame Ir',a:'Andrés Cepeda',h:15.84,p:290},{t:'Die For You',a:'The Weeknd',h:14.99,p:238},{t:'Por Amarte Así',a:'Cristian Castro',h:14.74,p:236},{t:'Volver a Amar',a:'Cristian Castro',h:14.66,p:215},{t:'Dime tú',a:'Danny Ocean',h:14.43,p:284},{t:'Verónica',a:'Cristian Castro',h:13.95,p:206},{t:'Labios Compartidos',a:'Maná',h:13.80,p:185},{t:'Te Necesito',a:'Cali Y El Dandee',h:13.66,p:245},{t:'Amapolas - Remix',a:'Leo Rizzi',h:13.55,p:210},{t:'Yo Quería',a:'Cristian Castro',h:13.54,p:233}
+  ],
+  completion:[38439,153044,50521],
+  platforms:[{n:'iPhone / iOS',h:7898.50,p:86.39},{n:'iPad / iOS',h:1115.73,p:12.20},{n:'Windows',h:117.77,p:1.29},{n:'Android',h:7.63,p:0.08},{n:'Web',h:2.82,p:0.03}]
+};
+
+// ============================================================
+// UTILS
+// ============================================================
+function genMonthLabels(start, end) {
+  const labels = [];
+  let [sy, sm] = start.split('-').map(Number);
+  const [ey, em] = end.split('-').map(Number);
+  while (sy < ey || (sy === ey && sm <= em)) {
+    labels.push(`${sy}-${String(sm).padStart(2,'0')}`);
+    sm++; if (sm > 12) { sm = 1; sy++; }
+  }
+  return labels;
+}
+
+function mapToLabels(labels, dataObj) {
+  return labels.map(m => dataObj[m] != null ? dataObj[m] : null);
+}
+
+function interpolateColor(hex1, hex2, t) {
+  const r1=parseInt(hex1.slice(1,3),16), g1=parseInt(hex1.slice(3,5),16), b1=parseInt(hex1.slice(5,7),16);
+  const r2=parseInt(hex2.slice(1,3),16), g2=parseInt(hex2.slice(3,5),16), b2=parseInt(hex2.slice(5,7),16);
+  const r=Math.round(r1+(r2-r1)*t), g=Math.round(g1+(g2-g1)*t), b=Math.round(b1+(b2-b1)*t);
+  return `rgb(${r},${g},${b})`;
+}
+
+Chart.defaults.color = '#737373';
+Chart.defaults.borderColor = '#2a2a2a';
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 11;
+
+const darkPlugin = {
+  id: 'darkBg',
+  beforeDraw: chart => {
+    const ctx = chart.canvas.getContext('2d');
+    ctx.save(); ctx.fillStyle = 'transparent'; ctx.restore();
+  }
+};
+
+function baseOptions(extra = {}) {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    animation: { duration: 800, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(0,0,0,0.9)',
+        borderColor: '#333', borderWidth: 1,
+        titleColor: '#fff', bodyColor: '#b3b3b3',
+        padding: 10, cornerRadius: 8,
+        ...extra.tooltip
+      },
+      ...extra.plugins
+    },
+    scales: {
+      x: { grid: { color: '#1a1a1a' }, ticks: { color: '#555', maxRotation: 0 }, ...extra.x },
+      y: { grid: { color: '#1a1a1a' }, ticks: { color: '#555' }, ...extra.y }
+    },
+    ...extra
+  };
+}
+
+// ============================================================
+// COUNTER ANIMATION
+// ============================================================
+function animateCounter(el, target, decimals=0, prefix='', suffix='') {
+  const start = performance.now();
+  const dur = 1200;
+  function step(now) {
+    const t = Math.min((now - start) / dur, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    const val = target * ease;
+    el.textContent = prefix + (decimals ? val.toFixed(decimals) : Math.round(val).toLocaleString()) + suffix;
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ============================================================
+// HEATMAP BUILDER
+// ============================================================
+function buildHeatmap(containerId, data, color, days) {
+  const container = document.getElementById(containerId);
+  const maxVal = Math.max(...data.flat());
+  const DAYS = days || ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const HOURS = Array.from({length:24},(_,i)=>i);
+  const tooltip = document.getElementById('hmTooltip');
+
+  const grid = document.createElement('div');
+  grid.className = 'heatmap-grid';
+
+  // corner
+  const corner = document.createElement('div');
+  grid.appendChild(corner);
+
+  // hour labels
+  HOURS.forEach(h => {
+    const lbl = document.createElement('div');
+    lbl.className = 'heatmap-hour-label';
+    lbl.textContent = h % 3 === 0 ? `${h}h` : '';
+    grid.appendChild(lbl);
+  });
+
+  // rows
+  data.forEach((row, di) => {
+    const dayLbl = document.createElement('div');
+    dayLbl.className = 'heatmap-day-label';
+    dayLbl.textContent = DAYS[di];
+    grid.appendChild(dayLbl);
+
+    row.forEach((val, hi) => {
+      const cell = document.createElement('div');
+      cell.className = 'heatmap-cell';
+      const t = maxVal > 0 ? val / maxVal : 0;
+      cell.style.background = interpolateColor('#1a1a1a', color, t);
+      cell.addEventListener('mousemove', e => {
+        tooltip.style.display = 'block';
+        tooltip.style.left = (e.clientX + 12) + 'px';
+        tooltip.style.top = (e.clientY - 28) + 'px';
+        tooltip.textContent = `${DAYS[di]} ${hi}:00 — ${val.toFixed(1)} horas`;
+      });
+      cell.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+      grid.appendChild(cell);
+    });
+  });
+
+  container.appendChild(grid);
+}
+
+// ============================================================
+// TOP TRACKS LIST
+// ============================================================
+function buildTrackList(containerId, tracks, color) {
+  const container = document.getElementById(containerId);
+  const maxH = tracks[0].h;
+  const ranks = ['gold','silver','bronze'];
+  tracks.forEach((t, i) => {
+    const item = document.createElement('div');
+    item.className = 'top-item';
+    const rankClass = i < 3 ? ranks[i] : '';
+    item.innerHTML = `
+      <div class="top-rank ${rankClass}">${i+1}</div>
+      <div class="top-info">
+        <div class="top-name">${t.t}</div>
+        <div class="top-sub">${t.a} · ${t.p.toLocaleString()} plays</div>
+      </div>
+      <div class="top-bar-wrap">
+        <div class="top-bar-bg"><div class="top-bar-fill" style="width:${(t.h/maxH*100).toFixed(0)}%;background:${color}"></div></div>
+      </div>
+      <div class="top-hours">${t.h.toFixed(1)}h</div>`;
+    container.appendChild(item);
+  });
+}
+
+// ============================================================
+// DONUT LEGEND
+// ============================================================
+function buildDonutLegend(containerId, items, colors) {
+  const container = document.getElementById(containerId);
+  items.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'legend-item';
+    el.innerHTML = `<div class="legend-dot" style="background:${colors[i]}"></div><div class="legend-label">${item.n}</div><div class="legend-val">${item.p.toFixed(1)}%</div>`;
+    container.appendChild(el);
+  });
+}
+
+// ============================================================
+// CHART INITS
+// ============================================================
+let chartsBuilt = { jp: false, ar: false, cmp: false };
+
+function initJP() {
+  if (chartsBuilt.jp) return;
+  chartsBuilt.jp = true;
+
+  // Counters
+  animateCounter(document.getElementById('jp-hrs-hero'), 4716.03, 0, '', ' h');
+  animateCounter(document.getElementById('jp-days-hero'), 196.5, 1, '', ' d');
+  animateCounter(document.getElementById('jp-artists-hero'), 2864, 0, '', '');
+  animateCounter(document.getElementById('jp-tracks-hero'), 7993, 0, '', '');
+
+  const LABELS = genMonthLabels('2015-01','2026-05');
+  const jpVals = mapToLabels(LABELS, JP_DATA.monthly);
+  const shortLabels = LABELS.map(m => m.endsWith('-01') ? m.slice(0,4) : (m.endsWith('-07') ? m.slice(5,7)+'/'+m.slice(2,4) : ''));
+
+  // Timeline
+  new Chart(document.getElementById('chart-jp-timeline'), {
+    type: 'line',
+    data: {
+      labels: shortLabels,
+      datasets: [{
+        data: jpVals, borderColor: '#1DB954', backgroundColor: 'rgba(29,185,84,0.08)',
+        fill: true, tension: 0.3, borderWidth: 2, pointRadius: 0,
+        pointHoverRadius: 5, pointHoverBackgroundColor: '#1DB954'
+      }]
+    },
+    options: {
+      ...baseOptions(),
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#444', maxTicksLimit: 14 } },
+        y: { grid: { color: '#1a1a1a' }, ticks: { color: '#555', callback: v => v+'h' } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(0,0,0,0.9)', borderColor: '#333', borderWidth: 1,
+          callbacks: {
+            title: ctx => LABELS[ctx[0].dataIndex],
+            label: ctx => ` ${ctx.raw ? ctx.raw.toFixed(1) + ' horas' : 'Sin datos'}`
+          }
+        }
+      }
+    }
+  });
+
+  // Hourly
+  const hours = Array.from({length:24},(_,i)=>i);
+  new Chart(document.getElementById('chart-jp-hourly'), {
+    type: 'bar',
+    data: {
+      labels: hours.map(h => h+'h'),
+      datasets: [{ data: JP_DATA.hourlyHours, backgroundColor: hours.map(h => {
+        const t = JP_DATA.hourlyHours[h] / Math.max(...JP_DATA.hourlyHours);
+        return `rgba(29,185,84,${0.3 + t * 0.7})`;
+      }), borderRadius: 3, borderSkipped: false }]
+    },
+    options: { ...baseOptions(), scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }, y: { grid: { color: '#1a1a1a' }, ticks: { callback: v => v+'h' } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toFixed(1)} horas acumuladas` } } } }
+  });
+
+  // Skip rate
+  new Chart(document.getElementById('chart-jp-skiprate'), {
+    type: 'bar',
+    data: {
+      labels: hours.map(h => h+'h'),
+      datasets: [{ data: JP_DATA.hourlySkip, backgroundColor: JP_DATA.hourlySkip.map(v => {
+        const t = v / 50;
+        return `rgba(${Math.round(239-t*50)},${Math.round(68+t*50)},68,${0.5+t*0.5})`;
+      }), borderRadius: 3 }]
+    },
+    options: { ...baseOptions(), scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }, y: { grid: { color: '#1a1a1a' }, ticks: { callback: v => v+'%' }, max: 55 } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toFixed(1)}% skip rate` } } } }
+  });
+
+  // Heatmap
+  buildHeatmap('heatmap-jp', JP_DATA.heatmap, '#1DB954');
+
+  // Top artists
+  new Chart(document.getElementById('chart-jp-artists'), {
+    type: 'bar',
+    data: {
+      labels: JP_DATA.topArtists.map(a => a.n),
+      datasets: [{ data: JP_DATA.topArtists.map(a => a.h), backgroundColor: JP_DATA.topArtists.map((_,i) => `rgba(29,185,84,${1-i*0.07})`), borderRadius: 4, borderSkipped: false }]
+    },
+    options: { ...baseOptions(), indexAxis: 'y', scales: { x: { grid: { color: '#1a1a1a' }, ticks: { callback: v => v+'h' } }, y: { grid: { display: false }, ticks: { color: '#ccc', font: { size: 11 } } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toFixed(1)} horas · ${JP_DATA.topArtists[ctx.dataIndex].p.toLocaleString()} plays` } } } }
+  });
+
+  // Tracks list
+  buildTrackList('list-jp-tracks', JP_DATA.topTracks, '#1DB954');
+
+  // Completion donut
+  const compColors = ['#ef4444','#1DB954','#f59e0b'];
+  const compLabels = [
+    {n:'Saltadas',p:(JP_DATA.completion[0]/(JP_DATA.completion[0]+JP_DATA.completion[1]+JP_DATA.completion[2])*100)},
+    {n:'Completas',p:(JP_DATA.completion[1]/(JP_DATA.completion[0]+JP_DATA.completion[1]+JP_DATA.completion[2])*100)},
+    {n:'Parciales',p:(JP_DATA.completion[2]/(JP_DATA.completion[0]+JP_DATA.completion[1]+JP_DATA.completion[2])*100)}
+  ];
+  new Chart(document.getElementById('chart-jp-completion'), {
+    type: 'doughnut',
+    data: { labels: compLabels.map(c=>c.n), datasets: [{ data: JP_DATA.completion, backgroundColor: compColors, borderWidth: 0, hoverOffset: 4 }] },
+    options: { ...baseOptions(), cutout: '68%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${((ctx.raw/(JP_DATA.completion[0]+JP_DATA.completion[1]+JP_DATA.completion[2]))*100).toFixed(1)}%` } } } }
+  });
+  buildDonutLegend('legend-jp-completion', compLabels, compColors);
+
+  // Platforms donut
+  const platColors = ['#1DB954','#22d3ee','#a78bfa','#fb923c','#f472b6','#94a3b8'];
+  new Chart(document.getElementById('chart-jp-platforms'), {
+    type: 'doughnut',
+    data: { labels: JP_DATA.platforms.map(p=>p.n), datasets: [{ data: JP_DATA.platforms.map(p=>p.h), backgroundColor: platColors, borderWidth: 0, hoverOffset: 4 }] },
+    options: { ...baseOptions(), cutout: '68%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${JP_DATA.platforms[ctx.dataIndex].p.toFixed(1)}%` } } } }
+  });
+  buildDonutLegend('legend-jp-platforms', JP_DATA.platforms.slice(0,5), platColors);
+}
+
+function initAR() {
+  if (chartsBuilt.ar) return;
+  chartsBuilt.ar = true;
+
+  animateCounter(document.getElementById('ar-hrs-hero'), 9142.46, 0, '', ' h');
+  animateCounter(document.getElementById('ar-days-hero'), 380.94, 1, '', ' d');
+  animateCounter(document.getElementById('ar-artists-hero'), 2662, 0, '', '');
+  animateCounter(document.getElementById('ar-tracks-hero'), 9763, 0, '', '');
+
+  const LABELS = genMonthLabels('2015-01','2026-05');
+  const arVals = mapToLabels(LABELS, AR_DATA.monthly);
+  const shortLabels = LABELS.map(m => m.endsWith('-01') ? m.slice(0,4) : (m.endsWith('-07') ? m.slice(5,7)+'/'+m.slice(2,4) : ''));
+
+  new Chart(document.getElementById('chart-ar-timeline'), {
+    type: 'line',
+    data: {
+      labels: shortLabels,
+      datasets: [{ data: arVals, borderColor: '#E8119C', backgroundColor: 'rgba(232,17,156,0.08)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 0, pointHoverRadius: 5, pointHoverBackgroundColor: '#E8119C' }]
+    },
+    options: { ...baseOptions(), scales: { x: { grid: { display: false }, ticks: { color: '#444', maxTicksLimit: 14 } }, y: { grid: { color: '#1a1a1a' }, ticks: { callback: v => v+'h' } } }, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(0,0,0,0.9)', borderColor: '#333', borderWidth: 1, callbacks: { title: ctx => LABELS[ctx[0].dataIndex], label: ctx => ` ${ctx.raw ? ctx.raw.toFixed(1) + ' horas' : 'Sin datos'}` } } } }
+  });
+
+  const hours = Array.from({length:24},(_,i)=>i);
+  new Chart(document.getElementById('chart-ar-hourly'), {
+    type: 'bar',
+    data: { labels: hours.map(h=>h+'h'), datasets: [{ data: AR_DATA.hourlyHours, backgroundColor: hours.map(h => { const t = AR_DATA.hourlyHours[h]/Math.max(...AR_DATA.hourlyHours); return `rgba(232,17,156,${0.3+t*0.7})`; }), borderRadius: 3 }] },
+    options: { ...baseOptions(), scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }, y: { grid: { color: '#1a1a1a' }, ticks: { callback: v => v+'h' } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toFixed(1)} horas acumuladas` } } } }
+  });
+
+  new Chart(document.getElementById('chart-ar-skiprate'), {
+    type: 'bar',
+    data: { labels: hours.map(h=>h+'h'), datasets: [{ data: AR_DATA.hourlySkip, backgroundColor: AR_DATA.hourlySkip.map(v => { const t=v/35; return `rgba(${Math.round(239-t*50)},${Math.round(68+t*50)},68,${0.5+t*0.5})`; }), borderRadius: 3 }] },
+    options: { ...baseOptions(), scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }, y: { grid: { color: '#1a1a1a' }, ticks: { callback: v => v+'%' }, max: 40 } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toFixed(1)}% skip rate` } } } }
+  });
+
+  buildHeatmap('heatmap-ar', AR_DATA.heatmap, '#E8119C');
+
+  new Chart(document.getElementById('chart-ar-artists'), {
+    type: 'bar',
+    data: { labels: AR_DATA.topArtists.map(a=>a.n), datasets: [{ data: AR_DATA.topArtists.map(a=>a.h), backgroundColor: AR_DATA.topArtists.map((_,i)=>`rgba(232,17,156,${1-i*0.07})`), borderRadius: 4, borderSkipped: false }] },
+    options: { ...baseOptions(), indexAxis: 'y', scales: { x: { grid: { color: '#1a1a1a' }, ticks: { callback: v => v+'h' } }, y: { grid: { display: false }, ticks: { color: '#ccc', font: { size: 11 } } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toFixed(1)} horas · ${AR_DATA.topArtists[ctx.dataIndex].p.toLocaleString()} plays` } } } }
+  });
+
+  buildTrackList('list-ar-tracks', AR_DATA.topTracks, '#E8119C');
+
+  const compColors = ['#ef4444','#E8119C','#f59e0b'];
+  const total = AR_DATA.completion.reduce((a,b)=>a+b,0);
+  const arCompLabels = [
+    {n:'Saltadas',p:AR_DATA.completion[0]/total*100},
+    {n:'Completas',p:AR_DATA.completion[1]/total*100},
+    {n:'Parciales',p:AR_DATA.completion[2]/total*100}
+  ];
+  new Chart(document.getElementById('chart-ar-completion'), {
+    type: 'doughnut',
+    data: { labels: arCompLabels.map(c=>c.n), datasets: [{ data: AR_DATA.completion, backgroundColor: compColors, borderWidth: 0, hoverOffset: 4 }] },
+    options: { ...baseOptions(), cutout: '68%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${(ctx.raw/total*100).toFixed(1)}%` } } } }
+  });
+  buildDonutLegend('legend-ar-completion', arCompLabels, compColors);
+
+  const platColors = ['#E8119C','#22d3ee','#a78bfa','#fb923c','#94a3b8'];
+  new Chart(document.getElementById('chart-ar-platforms'), {
+    type: 'doughnut',
+    data: { labels: AR_DATA.platforms.map(p=>p.n), datasets: [{ data: AR_DATA.platforms.map(p=>p.h), backgroundColor: platColors, borderWidth: 0, hoverOffset: 4 }] },
+    options: { ...baseOptions(), cutout: '68%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${AR_DATA.platforms[ctx.dataIndex].p.toFixed(1)}%` } } } }
+  });
+  buildDonutLegend('legend-ar-platforms', AR_DATA.platforms, platColors);
+}
+
+function initCMP() {
+  if (chartsBuilt.cmp) return;
+  chartsBuilt.cmp = true;
+
+  const LABELS = genMonthLabels('2015-01','2026-05');
+  const jpVals = mapToLabels(LABELS, JP_DATA.monthly);
+  const arVals = mapToLabels(LABELS, AR_DATA.monthly);
+  const shortLabels = LABELS.map(m => m.endsWith('-01') ? m.slice(0,4) : (m.endsWith('-07') ? m.slice(5,7) : ''));
+
+  // Timeline comparison
+  new Chart(document.getElementById('chart-cmp-timeline'), {
+    type: 'line',
+    data: {
+      labels: shortLabels,
+      datasets: [
+        { label: 'Juan Pablo', data: jpVals, borderColor: '#1DB954', backgroundColor: 'rgba(29,185,84,0.06)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 },
+        { label: 'Aranza', data: arVals, borderColor: '#E8119C', backgroundColor: 'rgba(232,17,156,0.06)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 0, pointHoverRadius: 4 }
+      ]
+    },
+    options: {
+      ...baseOptions(),
+      scales: { x: { grid: { display: false }, ticks: { color: '#444', maxTicksLimit: 14 } }, y: { grid: { color: '#1a1a1a' }, ticks: { callback: v => v+'h' } } },
+      plugins: {
+        legend: { display: true, labels: { color: '#b3b3b3', usePointStyle: true, pointStyle: 'circle', boxWidth: 8, padding: 16 } },
+        tooltip: { mode: 'index', intersect: false, backgroundColor: 'rgba(0,0,0,0.9)', borderColor: '#333', borderWidth: 1, callbacks: { title: ctx => LABELS[ctx[0].dataIndex], label: ctx => ` ${ctx.dataset.label}: ${ctx.raw ? ctx.raw.toFixed(1)+'h' : 'n/d'}` } }
+      }
+    }
+  });
+
+  // Hourly comparison
+  const hours = Array.from({length:24},(_,i)=>i+'h');
+  new Chart(document.getElementById('chart-cmp-hourly'), {
+    type: 'bar',
+    data: {
+      labels: hours,
+      datasets: [
+        { label: 'Juan Pablo', data: JP_DATA.hourlyHours, backgroundColor: 'rgba(29,185,84,0.7)', borderRadius: 2 },
+        { label: 'Aranza', data: AR_DATA.hourlyHours, backgroundColor: 'rgba(232,17,156,0.7)', borderRadius: 2 }
+      ]
+    },
+    options: { ...baseOptions(), scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 12 } }, y: { grid: { color: '#1a1a1a' }, ticks: { callback: v => v+'h' } } }, plugins: { legend: { display: true, labels: { color: '#b3b3b3', usePointStyle: true, boxWidth: 8, padding: 12 } }, tooltip: { mode: 'index', intersect: false, backgroundColor: 'rgba(0,0,0,0.9)', borderColor: '#333', borderWidth: 1 } } }
+  });
+
+  // Weekday comparison
+  const wdays = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  new Chart(document.getElementById('chart-cmp-weekday'), {
+    type: 'bar',
+    data: {
+      labels: wdays,
+      datasets: [
+        { label: 'Juan Pablo', data: JP_DATA.weekdayHours, backgroundColor: 'rgba(29,185,84,0.7)', borderRadius: 4 },
+        { label: 'Aranza', data: AR_DATA.weekdayHours, backgroundColor: 'rgba(232,17,156,0.7)', borderRadius: 4 }
+      ]
+    },
+    options: { ...baseOptions(), scales: { x: { grid: { display: false } }, y: { grid: { color: '#1a1a1a' }, ticks: { callback: v => v+'h' } } }, plugins: { legend: { display: true, labels: { color: '#b3b3b3', usePointStyle: true, boxWidth: 8, padding: 12 } }, tooltip: { mode: 'index', intersect: false, backgroundColor: 'rgba(0,0,0,0.9)', borderColor: '#333', borderWidth: 1 } } }
+  });
+
+  // Radar
+  new Chart(document.getElementById('chart-cmp-radar'), {
+    type: 'radar',
+    data: {
+      labels: ['Volumen Total','Diversidad','Engagement','Sesión Larga','Lealtad TOP1','Intensidad/Día'],
+      datasets: [
+        { label: 'Juan Pablo', data: [51.6,100,72.5,75.4,100,61.2], borderColor: '#1DB954', backgroundColor: 'rgba(29,185,84,0.15)', pointBackgroundColor: '#1DB954', borderWidth: 2, pointRadius: 4 },
+        { label: 'Aranza', data: [100,92.9,84.1,100,41.6,100], borderColor: '#E8119C', backgroundColor: 'rgba(232,17,156,0.15)', pointBackgroundColor: '#E8119C', borderWidth: 2, pointRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 800 },
+      scales: { r: { backgroundColor: 'transparent', grid: { color: '#2a2a2a' }, angleLines: { color: '#2a2a2a' }, pointLabels: { color: '#9ca3af', font: { size: 11, weight: '600' } }, ticks: { display: false }, min: 0, max: 100 } },
+      plugins: { legend: { display: true, labels: { color: '#b3b3b3', usePointStyle: true, boxWidth: 8, padding: 16 } }, tooltip: { backgroundColor: 'rgba(0,0,0,0.9)', borderColor: '#333', borderWidth: 1 } }
+    }
+  });
+}
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function showTab(name) {
+  ['jp','ar','cmp'].forEach(t => {
+    document.getElementById('section-' + (t==='cmp'?'cmp':t)).classList.remove('active');
+    document.getElementById('tab-' + (t==='cmp'?'cmp':t)).classList.remove('active');
+  });
+
+  const map = { jp: 'jp', ar: 'ar', cmp: 'cmp' };
+  document.getElementById('section-' + map[name]).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (name === 'jp') initJP();
+  else if (name === 'ar') initAR();
+  else if (name === 'cmp') initCMP();
+}
+
+// Init JP on load
+window.addEventListener('load', () => {
+  setTimeout(() => initJP(), 100);
+});
+</script>
+</body>
+</html>

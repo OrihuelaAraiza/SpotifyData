@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 5%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 98%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 98%;
+    --border: 0 0% 18%;
+    --radius: 12px;
+  }
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    background: #0a0a0a;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] rounded-xl;
+  }
+  .glow-jp {
+    box-shadow: 0 0 30px rgba(29,185,84,0.15), inset 0 1px 0 rgba(29,185,84,0.1);
+  }
+  .glow-ar {
+    box-shadow: 0 0 30px rgba(232,17,156,0.15), inset 0 1px 0 rgba(232,17,156,0.1);
+  }
+  .gradient-text-jp {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #1DB954 0%, #4ade80 100%);
+  }
+  .gradient-text-ar {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #E8119C 0%, #f472b6 100%);
+  }
+  .gradient-text-vs {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #1DB954 0%, #E8119C 100%);
+  }
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  .hover-lift:hover {
+    @apply -translate-y-1;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+  .tab-glow-jp:hover, .tab-glow-jp[data-state="active"] {
+    box-shadow: 0 0 20px rgba(29,185,84,0.3);
+  }
+  .tab-glow-ar:hover, .tab-glow-ar[data-state="active"] {
+    box-shadow: 0 0 20px rgba(232,17,156,0.3);
+  }
+  .bar-track {
+    @apply h-1.5 bg-white/10 rounded-full overflow-hidden;
+  }
+  .shimmer-bg {
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #444; }
+
+/* Recharts overrides */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: rgba(255,255,255,0.04) !important;
+}
+.recharts-tooltip-wrapper { outline: none !important; }
+.recharts-default-tooltip {
+  background: rgba(10,10,10,0.95) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 10px !important;
+  backdrop-filter: blur(20px) !important;
+}
+.recharts-text { fill: #555 !important; font-family: 'Inter', sans-serif !important; font-size: 11px !important; }
+
+/* Heatmap */
+.heatmap-cell {
+  @apply rounded-sm cursor-pointer transition-all duration-150;
+}
+.heatmap-cell:hover {
+  @apply scale-125 z-10 relative;
+  filter: brightness(1.4);
+}
