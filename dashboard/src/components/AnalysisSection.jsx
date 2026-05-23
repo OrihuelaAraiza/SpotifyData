@@ -24,7 +24,12 @@ const tooltipStyle = {
   labelStyle: { color: "#fff", fontWeight: 700 },
 };
 
-const CLUSTER_COLORS = ["#6366f1", "#f59e0b", "#10b981"];
+const PERSON_CLUSTER_COLORS = {
+  jp: ["#1DB954", "#06b6d4", "#a78bfa"],
+  ar: ["#E8119C", "#fb923c", "#a78bfa"],
+};
+// resolved per render via getClusterColors(person.id)
+let CLUSTER_COLORS = ["#6366f1", "#f59e0b", "#10b981"]; // fallback
 const BLOCKS = ["madrugada", "manana", "tarde", "noche"];
 const BLOCK_LABELS = { madrugada: "Madrugada\n0-6h", manana: "Mañana\n6-12h", tarde: "Tarde\n12-18h", noche: "Noche\n18-0h" };
 const DAYS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
@@ -511,6 +516,8 @@ function PersonAnalysis({ person, data }) {
 
 // ── Main Export ───────────────────────────────────────────────────────────────
 export function AnalysisSection({ person }) {
+  // Set cluster colors before rendering so all sub-components pick them up
+  CLUSTER_COLORS = PERSON_CLUSTER_COLORS[person.id] ?? PERSON_CLUSTER_COLORS.jp;
   const data = ANALYSIS[person.id === "jp" ? "jp" : "ar"];
   return <PersonAnalysis person={person} data={data} />;
 }

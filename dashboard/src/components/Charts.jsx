@@ -1,7 +1,7 @@
 import {
   AreaChart, Area, BarChart, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis,
   PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  Legend, PolarRadiusAxis
+  Legend, PolarRadiusAxis, ReferenceLine
 } from "recharts";
 import { genMonthLabels, mapToLabels } from "../lib/utils";
 
@@ -21,19 +21,29 @@ const tooltipStyle = {
 };
 
 // ─── Timeline Chart ────────────────────────────────────────────
-export function TimelineChart({ data, color, colorAlpha }) {
+function AnnotationLabel({ viewBox, label, color }) {
+  const { x, y } = viewBox;
+  return (
+    <g>
+      <text x={x + 5} y={y + 16} fill={color} fontSize={9} fontFamily="Inter" fontWeight={700} opacity={0.85}>
+        {label}
+      </text>
+    </g>
+  );
+}
+
+export function TimelineChart({ data, color, colorAlpha, annotations = [] }) {
   const LABELS = genMonthLabels("2015-01", "2026-05");
   const values = mapToLabels(LABELS, data);
 
   const chartData = LABELS.map((m, i) => ({
     month: m,
-    label: m.endsWith("-01") ? m.slice(0, 4) : m.endsWith("-07") ? `${m.slice(5, 7)}/${m.slice(2, 4)}` : "",
     hours: values[i],
   }));
 
   return (
     <ResponsiveContainer width="100%" height={280}>
-      <AreaChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
+      <AreaChart data={chartData} margin={{ top: 20, right: 12, bottom: 0, left: 0 }}>
         <defs>
           <linearGradient id={`grad-${color.slice(1)}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor={color} stopOpacity={0.3} />
@@ -41,13 +51,30 @@ export function TimelineChart({ data, color, colorAlpha }) {
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" />
-        <XAxis dataKey="label" tick={{ fill: "#444", fontSize: 10 }} axisLine={false} tickLine={false} interval={6} />
+        <XAxis
+          dataKey="month"
+          tick={{ fill: "#444", fontSize: 10 }}
+          tickFormatter={(v) => v.endsWith("-01") ? v.slice(0, 4) : ""}
+          interval={0}
+          axisLine={false}
+          tickLine={false}
+        />
         <YAxis tick={{ fill: "#444", fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}h`} />
         <Tooltip
           {...tooltipStyle}
           formatter={(v) => [`${v ? v.toFixed(1) : "—"} horas`, "Escucha"]}
-          labelFormatter={(_, payload) => payload?.[0]?.payload?.month || ""}
+          labelFormatter={(v) => v}
         />
+        {annotations.map((ann, i) => (
+          <ReferenceLine
+            key={i}
+            x={ann.month}
+            stroke={color}
+            strokeDasharray="4 3"
+            strokeOpacity={0.5}
+            label={<AnnotationLabel label={ann.label} color={color} />}
+          />
+        ))}
         <Area
           type="monotone"
           dataKey="hours"

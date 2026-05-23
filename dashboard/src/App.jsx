@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import * as Tabs from "@radix-ui/react-tabs";
-import { Music2, BarChart2, FlaskConical } from "lucide-react";
+import { Music2, BarChart2, FlaskConical, User } from "lucide-react";
 import { PersonSection } from "./components/PersonSection";
 import { CompareSection } from "./components/CompareSection";
 import { AnalysisSection } from "./components/AnalysisSection";
 import { JP, AR } from "./data/spotify";
 
-const TABS = [
-  { id: "jp",       label: "Juan Pablo",  icon: <Music2 size={14} />,       color: JP.color  },
-  { id: "ar",       label: "Aranza",      icon: <Music2 size={14} />,       color: AR.color  },
-  { id: "compare",  label: "Comparativa", icon: <BarChart2 size={14} />,    color: "#ffffff" },
-  { id: "analysis-jp", label: "Analisis JP",   icon: <FlaskConical size={14} />, color: JP.color  },
-  { id: "analysis-ar", label: "Analisis AR",   icon: <FlaskConical size={14} />, color: AR.color  },
+const PERSON_TABS = [
+  { id: "jp",      label: "Juan Pablo",  color: JP.color  },
+  { id: "ar",      label: "Aranza",      color: AR.color  },
+  { id: "compare", label: "Comparativa", color: "#ffffff" },
+];
+
+const SUB_TABS = [
+  { id: "profile",  label: "Perfil",   icon: <User size={12} />        },
+  { id: "analysis", label: "Analisis", icon: <FlaskConical size={12} /> },
 ];
 
 function SpotifyLogo() {
@@ -23,30 +26,25 @@ function SpotifyLogo() {
   );
 }
 
-function TabContent({ id, activeTab, children }) {
-  return (
-    <Tabs.Content value={id} forceMount className={activeTab !== id ? "hidden" : ""}>
-      <AnimatePresence mode="wait">
-        {activeTab === id && (
-          <motion.div
-            key={id}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.4 }}
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </Tabs.Content>
-  );
-}
-
 export default function App() {
-  const [activeTab, setActiveTab] = useState("jp");
+  const [activePerson, setActivePerson] = useState("jp");
+  const [subTabs, setSubTabs] = useState({ jp: "profile", ar: "profile" });
 
-  const activeColor = TABS.find(t => t.id === activeTab)?.color ?? "#ffffff";
+  const activeColor = activePerson === "jp" ? JP.color : activePerson === "ar" ? AR.color : "#ffffff";
+  const activePerson_data = activePerson === "jp" ? JP : AR;
+  const activeSubTab = subTabs[activePerson] ?? "profile";
+
+  function setSubTab(tab) {
+    setSubTabs(prev => ({ ...prev, [activePerson]: tab }));
+  }
+
+  function renderContent() {
+    if (activePerson === "compare") return <CompareSection />;
+    if (activeSubTab === "analysis") return <AnalysisSection person={activePerson_data} />;
+    return <PersonSection person={activePerson_data} />;
+  }
+
+  const contentKey = `${activePerson}-${activeSubTab}`;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -78,40 +76,85 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main content */}
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
-          {/* Tab list */}
-          <Tabs.List className="flex flex-wrap gap-2 mb-10 p-1 rounded-2xl bg-white/[0.03] border border-white/[0.06] w-fit mx-auto">
-            {TABS.map((tab) => (
-              <Tabs.Trigger
+        {/* ── Level 1: person selector ── */}
+        <div className="flex justify-center mb-3">
+          <div className="flex gap-2 p-1 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+            {PERSON_TABS.map((tab) => (
+              <button
                 key={tab.id}
-                value={tab.id}
-                className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 outline-none cursor-pointer text-white/40 hover:text-white/70 data-[state=active]:text-white"
+                onClick={() => setActivePerson(tab.id)}
+                className="relative flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-medium transition-colors duration-150 outline-none cursor-pointer"
+                style={{ color: activePerson === tab.id ? "#fff" : "rgba(255,255,255,0.35)" }}
               >
-                {activeTab === tab.id && (
+                {activePerson === tab.id && (
                   <motion.div
-                    layoutId="tab-indicator"
+                    layoutId="person-indicator"
                     className="absolute inset-0 rounded-xl"
-                    style={{ background: `${tab.color}15`, border: `1px solid ${tab.color}30` }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    style={{ background: `${tab.color}18`, border: `1px solid ${tab.color}35` }}
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
-                <span className="relative z-10 flex items-center">{tab.icon}</span>
+                <span className="relative z-10 flex items-center">
+                  <Music2 size={13} className="mr-1.5 opacity-70" />
+                </span>
                 <span className="relative z-10">{tab.label}</span>
-              </Tabs.Trigger>
+              </button>
             ))}
-          </Tabs.List>
+          </div>
+        </div>
 
-          <TabContent id="jp"          activeTab={activeTab}><PersonSection person={JP} /></TabContent>
-          <TabContent id="ar"          activeTab={activeTab}><PersonSection person={AR} /></TabContent>
-          <TabContent id="compare"     activeTab={activeTab}><CompareSection /></TabContent>
-          <TabContent id="analysis-jp" activeTab={activeTab}><AnalysisSection person={JP} /></TabContent>
-          <TabContent id="analysis-ar" activeTab={activeTab}><AnalysisSection person={AR} /></TabContent>
-        </Tabs.Root>
+        {/* ── Level 2: sub-tabs (only for JP / AR) ── */}
+        <AnimatePresence>
+          {activePerson !== "compare" && (
+            <motion.div
+              key="subtabs"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="flex justify-center mb-10 overflow-hidden"
+            >
+              <div className="flex gap-1 p-0.5 rounded-xl bg-white/[0.02] border border-white/[0.04] mt-2">
+                {SUB_TABS.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setSubTab(tab.id)}
+                    className="relative flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[12px] font-medium transition-colors duration-150 outline-none cursor-pointer"
+                    style={{ color: activeSubTab === tab.id ? "#fff" : "rgba(255,255,255,0.30)" }}
+                  >
+                    {activeSubTab === tab.id && (
+                      <motion.div
+                        layoutId="sub-indicator"
+                        className="absolute inset-0 rounded-lg"
+                        style={{ background: `${activeColor}20`, border: `1px solid ${activeColor}30` }}
+                        transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center opacity-70">{tab.icon}</span>
+                    <span className="relative z-10">{tab.label}</span>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        {activePerson === "compare" && <div className="mb-10" />}
+
+        {/* ── Content ── */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={contentKey}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.35 }}
+          >
+            {renderContent()}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-white/[0.04] py-6 mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="text-[11px] text-white/15">
