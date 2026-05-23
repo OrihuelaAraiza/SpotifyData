@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import * as Tabs from "@radix-ui/react-tabs";
+import { Music2, BarChart2 } from "lucide-react";
 import { PersonSection } from "./components/PersonSection";
 import { CompareSection } from "./components/CompareSection";
 import { JP, AR } from "./data/spotify";
 
 const TABS = [
-  { id: "jp", label: "Juan Pablo", emoji: "🎸", color: JP.color },
-  { id: "ar", label: "Aranza", emoji: "🎵", color: AR.color },
-  { id: "compare", label: "Comparativa", emoji: "⚡", color: "#ffffff" },
+  { id: "jp",      label: "Juan Pablo", icon: <Music2 size={14} />,   color: JP.color },
+  { id: "ar",      label: "Aranza",     icon: <Music2 size={14} />,   color: AR.color },
+  { id: "compare", label: "Comparativa",icon: <BarChart2 size={14} />, color: "#ffffff" },
 ];
 
 function SpotifyLogo() {
@@ -73,7 +74,7 @@ export default function App() {
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
-                <span className="relative z-10">{tab.emoji}</span>
+                <span className="relative z-10 flex items-center">{tab.icon}</span>
                 <span className="relative z-10">{tab.label}</span>
               </Tabs.Trigger>
             ))}

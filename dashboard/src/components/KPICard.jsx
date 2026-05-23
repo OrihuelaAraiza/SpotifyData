@@ -29,9 +29,7 @@ function useCountUp(target, duration = 1200, decimals = 0) {
     return () => observer.disconnect();
   }, [target, duration]);
 
-  const formatted = decimals
-    ? val.toFixed(decimals)
-    : Math.round(val).toLocaleString();
+  const formatted = decimals ? val.toFixed(decimals) : Math.round(val).toLocaleString();
   return [ref, formatted];
 }
 
@@ -50,21 +48,19 @@ export function KPICard({ label, value, sub, icon, color, accent, delay = 0, dec
       <Card
         className={cn(
           "relative overflow-hidden cursor-default transition-all duration-300 border border-white/[0.06]",
-          "hover:border-white/[0.12]",
-          accent && `hover:shadow-lg`
+          "hover:border-white/[0.12]"
         )}
-        style={accent ? { "--accent-color": accent } : {}}
       >
-        {/* Glow border on hover */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl pointer-events-none"
-          style={{ background: `linear-gradient(135deg, ${accent}08 0%, transparent 60%)` }}
+          style={{ background: `linear-gradient(135deg, ${color}08 0%, transparent 60%)` }}
         />
-
         <CardContent className="p-5">
           <div className="flex items-start justify-between mb-3">
-            <span className="text-xl">{icon}</span>
-            {color && <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />}
+            <span className="flex items-center justify-center opacity-60" style={{ color }}>
+              {icon}
+            </span>
+            <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
           </div>
           <div
             className="text-3xl font-black tracking-tight leading-none mb-1.5 tabular-nums"

@@ -1,4 +1,9 @@
 import { motion } from "framer-motion";
+import {
+  Clock, CalendarDays, Mic2, SkipForward, Play, Trophy,
+  BarChart2, TrendingUp, Grid3X3, Music2, PieChart as PieIcon,
+  Target, List, Lightbulb,
+} from "lucide-react";
 import { KPICard } from "./KPICard";
 import { InsightCard } from "./InsightCard";
 import { SectionLabel } from "./SectionLabel";
@@ -22,34 +27,43 @@ function StatRow({ label, value }) {
   );
 }
 
+function PersonIcon({ id, color, colorMuted }) {
+  const style = { color, background: colorMuted };
+  return (
+    <div className="w-24 h-24 flex items-center justify-center rounded-2xl shrink-0" style={style}>
+      {id === "jp"
+        ? <Music2 size={40} strokeWidth={1.5} />
+        : <Music2 size={40} strokeWidth={1.5} />}
+    </div>
+  );
+}
+
 export function PersonSection({ person }) {
-  const { name, short, color, colorAlpha, colorMuted, emoji, archetype, tagline, period, totals, sessions, completion, completionPct, concentration, peaks, monthly, hourlyHours, hourlySkip, heatmap, topArtists, topTracks, platforms, insights } = person;
+  const {
+    id, name, color, colorAlpha, colorMuted, archetype, tagline, period,
+    totals, sessions, completionPct, concentration, peaks,
+    monthly, hourlyHours, hourlySkip, heatmap, topArtists, topTracks,
+    platforms, insights,
+  } = person;
 
   const kpis = [
-    { label: "Horas Totales", value: totals.hours, suffix: "h", icon: "⏱", sub: `${totals.days.toFixed(0)} días continuos`, decimals: 0 },
-    { label: "Días Activos", value: totals.activeDays, icon: "📅", sub: `${totals.avgPerDay.toFixed(2)} h/día promedio`, decimals: 0 },
-    { label: "Artistas Únicos", value: totals.uniqueArtists, icon: "🎤", sub: `${totals.uniqueTracks.toLocaleString()} tracks únicos`, decimals: 0 },
-    { label: "Skip Rate", value: totals.skipRate, suffix: "%", icon: "⏩", sub: "Canciones saltadas", decimals: 1 },
-    { label: "Sesiones", value: sessions.count, icon: "▶", sub: `${sessions.avgMin.toFixed(0)} min promedio`, decimals: 0 },
-    { label: "Año Pico", value: peaks.peakYear, icon: "🏆", sub: `${peaks.peakYearH.toFixed(0)} horas ese año`, decimals: 0, noFormat: true },
+    { label: "Horas Totales",   value: totals.hours,         suffix: "h", icon: <Clock size={16} />,        sub: `${totals.days.toFixed(0)} días continuos`,          decimals: 0 },
+    { label: "Días Activos",    value: totals.activeDays,                   icon: <CalendarDays size={16} />, sub: `${totals.avgPerDay.toFixed(2)} h/día promedio`,      decimals: 0 },
+    { label: "Artistas Únicos", value: totals.uniqueArtists,                icon: <Mic2 size={16} />,         sub: `${totals.uniqueTracks.toLocaleString()} tracks`,     decimals: 0 },
+    { label: "Skip Rate",       value: totals.skipRate,      suffix: "%",  icon: <SkipForward size={16} />,  sub: "Canciones saltadas",                                 decimals: 1 },
+    { label: "Sesiones",        value: sessions.count,                      icon: <Play size={16} />,         sub: `${sessions.avgMin.toFixed(0)} min promedio`,         decimals: 0 },
+    { label: "Año Pico",        value: peaks.peakYear,                      icon: <Trophy size={16} />,       sub: `${peaks.peakYearH.toFixed(0)} horas ese año`,        decimals: 0 },
   ];
 
   const completionData = [
     { name: "Skip <30s", value: completionPct[0] },
-    { name: "Completa", value: completionPct[1] },
-    { name: "Parcial", value: completionPct[2] },
+    { name: "Completa",  value: completionPct[1] },
+    { name: "Parcial",   value: completionPct[2] },
   ];
   const completionColors = [color + "55", color, color + "99"];
 
-  const platformData = platforms.map(p => ({ name: p.n.split(" /")[0], value: p.pct }));
-  const platformColors = [color, color + "cc", color + "99", color + "66", color + "44"];
-
-  const monthlyChartData = Object.entries(monthly).map(([k, v]) => ({ month: k, hours: v }));
-
-  const hourlyData = hourlyHours;
-  const skipData = hourlySkip;
-
-  const artistsData = topArtists.slice(0, 10);
+  const platformData    = platforms.map(p => ({ name: p.n.split(" /")[0], value: p.pct }));
+  const platformColors  = [color, color + "cc", color + "99", color + "66", color + "44"];
 
   return (
     <div className="space-y-12 pb-16">
@@ -66,12 +80,7 @@ export function PersonSection({ person }) {
           style={{ background: `radial-gradient(ellipse at 0% 50%, ${color}30 0%, transparent 60%)` }}
         />
         <div className="relative flex flex-col md:flex-row md:items-center gap-6">
-          <div
-            className="text-6xl w-24 h-24 flex items-center justify-center rounded-2xl shrink-0"
-            style={{ background: colorMuted }}
-          >
-            {emoji}
-          </div>
+          <PersonIcon id={id} color={color} colorMuted={colorMuted} />
           <div className="flex-1">
             <div className="text-[11px] font-bold uppercase tracking-[3px] mb-1" style={{ color }}>
               {archetype}
@@ -99,48 +108,44 @@ export function PersonSection({ person }) {
         </div>
       </motion.div>
 
-      {/* KPI grid */}
-      <SectionLabel icon="📊" color={color}>Métricas Principales</SectionLabel>
+      {/* KPIs */}
+      <SectionLabel icon={<BarChart2 size={14} />} color={color}>Métricas Principales</SectionLabel>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {kpis.map((k, i) => (
           <KPICard key={i} {...k} color={color} delay={i * 0.07} />
         ))}
       </div>
 
-      {/* Timeline */}
-      <SectionLabel icon="📈" color={color}>Evolución Temporal</SectionLabel>
+      {/* Timeline — pass monthly object directly so mapToLabels can key on "YYYY-MM" */}
+      <SectionLabel icon={<TrendingUp size={14} />} color={color}>Evolución Temporal</SectionLabel>
       <Card>
         <CardHeader>
           <CardTitle>Horas por Mes — {period}</CardTitle>
         </CardHeader>
         <CardContent>
-          <TimelineChart data={monthlyChartData} color={color} colorAlpha={colorAlpha} />
+          <TimelineChart data={monthly} color={color} colorAlpha={colorAlpha} />
         </CardContent>
       </Card>
 
       {/* Hourly + Skip */}
-      <SectionLabel icon="🕐" color={color}>Patrones Horarios</SectionLabel>
+      <SectionLabel icon={<Clock size={14} />} color={color}>Patrones Horarios</SectionLabel>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Horas Escuchadas por Hora del Día</CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle>Horas Escuchadas por Hora del Día</CardTitle></CardHeader>
           <CardContent>
-            <HourlyChart data={hourlyData} color={color} />
+            <HourlyChart data={hourlyHours} color={color} />
           </CardContent>
         </Card>
         <Card>
-          <CardHeader>
-            <CardTitle>Tasa de Skip por Hora</CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle>Tasa de Skip por Hora</CardTitle></CardHeader>
           <CardContent>
-            <SkipRateChart data={skipData} color={color} />
+            <SkipRateChart data={hourlySkip} color={color} />
           </CardContent>
         </Card>
       </div>
 
       {/* Heatmap */}
-      <SectionLabel icon="🌡" color={color}>Mapa de Calor: Día × Hora</SectionLabel>
+      <SectionLabel icon={<Grid3X3 size={14} />} color={color}>Mapa de Calor: Día x Hora</SectionLabel>
       <Card>
         <CardHeader>
           <CardTitle>Intensidad de Escucha — Día de la Semana vs Hora del Día</CardTitle>
@@ -151,53 +156,45 @@ export function PersonSection({ person }) {
       </Card>
 
       {/* Top artists + Top tracks */}
-      <SectionLabel icon="🎤" color={color}>Top Artistas y Canciones</SectionLabel>
+      <SectionLabel icon={<Music2 size={14} />} color={color}>Top Artistas y Canciones</SectionLabel>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Top 10 Artistas por Horas</CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle>Top 10 Artistas por Horas</CardTitle></CardHeader>
           <CardContent>
-            <ArtistsChart artists={artistsData} color={color} />
+            <ArtistsChart artists={topArtists.slice(0, 10)} color={color} />
           </CardContent>
         </Card>
         <Card>
-          <CardHeader>
-            <CardTitle>Top 10 Canciones</CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle>Top 10 Canciones</CardTitle></CardHeader>
           <CardContent>
             <TopList tracks={topTracks} color={color} />
           </CardContent>
         </Card>
       </div>
 
-      {/* Donut charts */}
-      <SectionLabel icon="🍩" color={color}>Distribución</SectionLabel>
+      {/* Donuts */}
+      <SectionLabel icon={<PieIcon size={14} />} color={color}>Distribución</SectionLabel>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Forma de Escuchar</CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle>Forma de Escuchar</CardTitle></CardHeader>
           <CardContent>
             <DonutChart data={completionData} colors={completionColors} />
           </CardContent>
         </Card>
         <Card>
-          <CardHeader>
-            <CardTitle>Plataformas Utilizadas</CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle>Plataformas Utilizadas</CardTitle></CardHeader>
           <CardContent>
             <DonutChart data={platformData.slice(0, 5)} colors={platformColors} />
           </CardContent>
         </Card>
       </div>
 
-      {/* Concentration stats */}
-      <SectionLabel icon="🔍" color={color}>Concentración de Escucha</SectionLabel>
+      {/* Concentration */}
+      <SectionLabel icon={<Target size={14} />} color={color}>Concentración de Escucha</SectionLabel>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
-          { label: "Top 1 artista", pct: concentration.top1, desc: topArtists[0].n },
-          { label: "Top 10 artistas", pct: concentration.top10, desc: `${topArtists.slice(0,10).map(a=>a.n.split(" ")[0]).join(", ")}` },
+          { label: "Top 1 artista",   pct: concentration.top1,  desc: topArtists[0].n },
+          { label: "Top 10 artistas", pct: concentration.top10, desc: topArtists.slice(0, 10).map(a => a.n.split(" ")[0]).join(", ") },
           { label: "Top 20 artistas", pct: concentration.top20, desc: "del tiempo total acumulado" },
         ].map((item, i) => (
           <motion.div
@@ -223,33 +220,33 @@ export function PersonSection({ person }) {
         ))}
       </div>
 
-      {/* Misc stats */}
-      <SectionLabel icon="📋" color={color}>Datos Adicionales</SectionLabel>
+      {/* Stats tables */}
+      <SectionLabel icon={<List size={14} />} color={color}>Datos Adicionales</SectionLabel>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader><CardTitle>Resumen de Sesiones</CardTitle></CardHeader>
           <CardContent>
-            <StatRow label="Total de sesiones" value={sessions.count.toLocaleString("es-MX")} />
-            <StatRow label="Duración promedio" value={`${sessions.avgMin.toFixed(1)} min`} />
-            <StatRow label="Duración mediana" value={`${sessions.medianMin.toFixed(1)} min`} />
+            <StatRow label="Total de sesiones"   value={sessions.count.toLocaleString("es-MX")} />
+            <StatRow label="Duración promedio"   value={`${sessions.avgMin.toFixed(1)} min`} />
+            <StatRow label="Duración mediana"    value={`${sessions.medianMin.toFixed(1)} min`} />
             <StatRow label="Tracks/sesión prom." value={sessions.avgTracks.toFixed(1)} />
-            <StatRow label="% fin de semana" value={`${totals.weekendShare}%`} />
+            <StatRow label="% fin de semana"     value={`${totals.weekendShare}%`} />
           </CardContent>
         </Card>
         <Card>
           <CardHeader><CardTitle>Récords Personales</CardTitle></CardHeader>
           <CardContent>
-            <StatRow label="Mes pico" value={`${peaks.peakMonth} (${peaks.peakMonthH.toFixed(0)} h)`} />
-            <StatRow label="Año pico" value={`${peaks.peakYear} (${peaks.peakYearH.toFixed(0)} h)`} />
-            <StatRow label="Hora pico del día" value={`${peaks.peakHour}:00`} />
+            <StatRow label="Mes pico"           value={`${peaks.peakMonth} (${peaks.peakMonthH.toFixed(0)} h)`} />
+            <StatRow label="Año pico"           value={`${peaks.peakYear} (${peaks.peakYearH.toFixed(0)} h)`} />
+            <StatRow label="Hora pico del día"  value={`${peaks.peakHour}:00`} />
             <StatRow label="Día pico de semana" value={peaks.peakDay} />
-            <StatRow label="Skip rate global" value={`${totals.skipRate}%`} />
+            <StatRow label="Skip rate global"   value={`${totals.skipRate}%`} />
           </CardContent>
         </Card>
       </div>
 
       {/* Insights */}
-      <SectionLabel icon="💡" color={color}>Insights Destacados</SectionLabel>
+      <SectionLabel icon={<Lightbulb size={14} />} color={color}>Insights Destacados</SectionLabel>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {insights.map((insight, i) => (
           <InsightCard key={i} insight={insight} color={color} delay={i * 0.08} />

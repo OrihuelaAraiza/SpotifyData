@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { cn } from "../lib/utils";
+import { Lightbulb } from "lucide-react";
 
 export function InsightCard({ insight, color, delay = 0 }) {
   return (
@@ -14,15 +14,15 @@ export function InsightCard({ insight, color, delay = 0 }) {
         className="relative h-full rounded-xl p-5 border border-white/[0.06] bg-white/[0.02] overflow-hidden transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.04]"
         style={{ borderLeftColor: color, borderLeftWidth: 3 }}
       >
-        {/* Background glow */}
         <div
           className="absolute top-0 left-0 w-1/2 h-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
           style={{ background: `linear-gradient(90deg, ${color}08 0%, transparent 100%)` }}
         />
-
         <div className="relative">
-          <div className="text-2xl mb-3">{insight.icon}</div>
-          <div className="text-[13px] font-700 text-white mb-2 font-semibold">{insight.title}</div>
+          <div className="mb-3" style={{ color: color + "99" }}>
+            <Lightbulb size={18} strokeWidth={1.5} />
+          </div>
+          <div className="text-[13px] font-semibold text-white mb-2">{insight.title}</div>
           <div className="text-[12px] text-white/50 leading-relaxed mb-3">{insight.text}</div>
           <div
             className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"

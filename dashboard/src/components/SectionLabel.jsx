@@ -8,7 +8,9 @@ export function SectionLabel({ icon, children, color }) {
       transition={{ duration: 0.4 }}
       className="flex items-center gap-3 my-8"
     >
-      <span className="text-sm">{icon}</span>
+      <span className="flex items-center justify-center opacity-50" style={{ color }}>
+        {icon}
+      </span>
       <span className="text-[10px] font-bold tracking-[2px] uppercase text-white/25">{children}</span>
       <div className="flex-1 h-px bg-white/[0.05]" />
     </motion.div>
