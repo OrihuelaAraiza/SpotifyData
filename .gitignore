@@ -1,0 +1,5 @@
+
+# Large processed data files (exceed GitHub 100MB limit)
+data/processed/combinado/spotify_streams_limpio_combinado.csv
+data/processed/aranza/spotify_streams_limpio.csv
+data/processed/juan_pablo/spotify_streams_limpio.csv
