@@ -34,10 +34,33 @@ export const JP = {
   ],
 
   topArtists: [
-    {n:"Twenty One Pilots",h:406.43,p:10591,pct:8.62},{n:"The 1975",h:149.93,p:3966,pct:3.18},{n:"The Killers",h:144.35,p:4369,pct:3.06},{n:"Gorillaz",h:103.58,p:4891,pct:2.20},{n:"Little Jesus",h:93.51,p:2680,pct:1.98},{n:"Muse",h:89.89,p:2846,pct:1.91},{n:"My Chemical Romance",h:86.77,p:2251,pct:1.84},{n:"The Lumineers",h:78.27,p:3778,pct:1.66},{n:"Linkin Park",h:72.61,p:1932,pct:1.54},{n:"Måneskin",h:66.68,p:1892,pct:1.41},{n:"Molotov",h:64.23,p:2820,pct:1.36},{n:"Arctic Monkeys",h:62.35,p:2534,pct:1.32},{n:"Childish Gambino",h:57.83,p:1742,pct:1.23},{n:"Imagine Dragons",h:54.71,p:2096,pct:1.16},{n:"Eminem",h:54.58,p:1946,pct:1.16}
+    {n:"Twenty One Pilots",h:406.43,p:10591,pct:8.62,img:"https://cdn-images.dzcdn.net/images/artist/2e6d4d494a7b7b2c4bea2ccefad368f5/500x500-000000-80-0-0.jpg"},
+    {n:"The 1975",h:149.93,p:3966,pct:3.18,img:"https://cdn-images.dzcdn.net/images/artist/3408c43ed74f73c88281b37a62a51638/500x500-000000-80-0-0.jpg"},
+    {n:"The Killers",h:144.35,p:4369,pct:3.06,img:"https://cdn-images.dzcdn.net/images/artist/979d671d4b391bc07747bd1569e51997/500x500-000000-80-0-0.jpg"},
+    {n:"Gorillaz",h:103.58,p:4891,pct:2.20,img:"https://cdn-images.dzcdn.net/images/artist/ebbb1c133ed0220c714b9ed5d254561f/500x500-000000-80-0-0.jpg"},
+    {n:"Little Jesus",h:93.51,p:2680,pct:1.98,img:"https://cdn-images.dzcdn.net/images/artist/8fdbbeaa12e9c1e1eb74bd980a6851e3/500x500-000000-80-0-0.jpg"},
+    {n:"Muse",h:89.89,p:2846,pct:1.91,img:"https://cdn-images.dzcdn.net/images/artist/cd7c5861be0009d3b75d4d3c069317a7/500x500-000000-80-0-0.jpg"},
+    {n:"My Chemical Romance",h:86.77,p:2251,pct:1.84,img:"https://cdn-images.dzcdn.net/images/artist/e34296360cda10a29f85c7170a60178d/500x500-000000-80-0-0.jpg"},
+    {n:"The Lumineers",h:78.27,p:3778,pct:1.66,img:"https://cdn-images.dzcdn.net/images/artist/a0a4a39ed23545c446aa3e9a517504ea/500x500-000000-80-0-0.jpg"},
+    {n:"Linkin Park",h:72.61,p:1932,pct:1.54,img:"https://cdn-images.dzcdn.net/images/artist/4886905210739af3438990897bad3a98/500x500-000000-80-0-0.jpg"},
+    {n:"Måneskin",h:66.68,p:1892,pct:1.41,img:"https://cdn-images.dzcdn.net/images/artist/b5ee25137476918b7660f80529981436/500x500-000000-80-0-0.jpg"},
+    {n:"Molotov",h:64.23,p:2820,pct:1.36,img:"https://cdn-images.dzcdn.net/images/artist/b26a1ac3c46f6389c9cc232e1eb4ab30/500x500-000000-80-0-0.jpg"},
+    {n:"Arctic Monkeys",h:62.35,p:2534,pct:1.32,img:"https://cdn-images.dzcdn.net/images/artist/6c03e4c7c36800897fd468633286db24/500x500-000000-80-0-0.jpg"},
+    {n:"Childish Gambino",h:57.83,p:1742,pct:1.23,img:"https://cdn-images.dzcdn.net/images/artist/35ed4d691c7601ffaef55e743bc6fcde/500x500-000000-80-0-0.jpg"},
+    {n:"Imagine Dragons",h:54.71,p:2096,pct:1.16,img:"https://cdn-images.dzcdn.net/images/artist/1ba025c23cae3dee14b51152990285fc/500x500-000000-80-0-0.jpg"},
+    {n:"Eminem",h:54.58,p:1946,pct:1.16,img:"https://cdn-images.dzcdn.net/images/artist/0f30bbd33a680030054af004d698d6ac/500x500-000000-80-0-0.jpg"},
   ],
   topTracks: [
-    {t:"Car Radio",a:"Twenty One Pilots",h:18.44,p:363},{t:"Na Na Na (Na Na Na…)",a:"My Chemical Romance",h:16.31,p:457},{t:"Robbers",a:"The 1975",h:15.82,p:319},{t:"Mi Vida",a:"DLD",h:14.72,p:272},{t:"Paladin Strait",a:"Twenty One Pilots",h:14.60,p:209},{t:"TQM",a:"Little Jesus",h:14.40,p:245},{t:"Knights of Cydonia",a:"Muse",h:14.11,p:227},{t:"Welcome to the Black Parade",a:"My Chemical Romance",h:13.45,p:212},{t:"Redbone",a:"Childish Gambino",h:13.17,p:227},{t:"Psycho",a:"Muse",h:12.64,p:250}
+    {t:"Car Radio",a:"Twenty One Pilots",h:18.44,p:363,img:"https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/73/a7/23/73a7230c-19df-02a4-ff4e-53944024f63d/075679957924.jpg/300x300bb.jpg"},
+    {t:"Na Na Na (Na Na Na…)",a:"My Chemical Romance",h:16.31,p:457,img:"https://is1-ssl.mzstatic.com/image/thumb/Music/71/1e/b9/mzi.abvgmgsk.jpg/300x300bb.jpg"},
+    {t:"Robbers",a:"The 1975",h:15.82,p:319,img:"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/7f/3b/6e/7f3b6e0f-ac35-98ff-f27f-fc51db0efea4/13UAAIM67470.rgb.jpg/300x300bb.jpg"},
+    {t:"Mi Vida",a:"DLD",h:14.72,p:272,img:"https://is1-ssl.mzstatic.com/image/thumb/Music30/v4/2e/b3/56/2eb3568a-29ab-1e73-5ae1-64b975bb1c59/886445989120.jpg/300x300bb.jpg"},
+    {t:"Paladin Strait",a:"Twenty One Pilots",h:14.60,p:209,img:"https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/8b/39/c6/8b39c655-00fd-1b52-52ea-a98de686f3ae/075679659729.jpg/300x300bb.jpg"},
+    {t:"TQM",a:"Little Jesus",h:14.40,p:245,img:"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/9a/ac/24/9aac2425-03cc-5b41-1d59-e6427569a638/196006876784.jpg/300x300bb.jpg"},
+    {t:"Knights of Cydonia",a:"Muse",h:14.11,p:227,img:"https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/4a/c1/5d/4ac15dc9-2ae6-1d5b-3add-43bae227f941/825646095452.jpg/300x300bb.jpg"},
+    {t:"Welcome to the Black Parade",a:"My Chemical Romance",h:13.45,p:212,img:"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/7e/ac/69/7eac6998-7fa4-f1ab-9601-e8b791c736fa/mzi.fbpszunc.jpg/300x300bb.jpg"},
+    {t:"Redbone",a:"Childish Gambino",h:13.17,p:227,img:"https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/60/b5/6d/60b56d6e-be3e-fd6c-32df-62ed9fa44c6a/1a2284a9-39d0-4db5-a511-457834a732be.jpg/300x300bb.jpg"},
+    {t:"Psycho",a:"Muse",h:12.64,p:250,img:"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/82/51/52/825152b4-9423-b23b-c036-cc67ead732d4/888888046775.jpg/300x300bb.jpg"},
   ],
   platforms: [{n:"iPhone / iOS",h:4107.08,pct:87.09},{n:"iPad / iOS",h:196.26,pct:4.16},{n:"Other",h:194.12,pct:4.12},{n:"Windows",h:145.79,pct:3.09},{n:"Android",h:69.09,pct:1.46},{n:"Web",h:3.70,pct:0.08}],
 
@@ -87,10 +110,33 @@ export const AR = {
   ],
 
   topArtists: [
-    {n:"Morat",h:328.25,p:7318,pct:3.59},{n:"Justin Bieber",h:188.24,p:5085,pct:2.06},{n:"Danny Ocean",h:172.83,p:4089,pct:1.89},{n:"TINI",h:166.90,p:3989,pct:1.83},{n:"The Weeknd",h:158.05,p:3261,pct:1.73},{n:"Bad Bunny",h:148.09,p:3679,pct:1.62},{n:"One Direction",h:139.20,p:3992,pct:1.52},{n:"Ariana Grande",h:132.13,p:3088,pct:1.45},{n:"Reik",h:120.68,p:3214,pct:1.32},{n:"Cristian Castro",h:114.90,p:1960,pct:1.26},{n:"Rauw Alejandro",h:109.95,p:2420,pct:1.20},{n:"Ozuna",h:91.35,p:2534,pct:1.00},{n:"J Balvin",h:90.28,p:2510,pct:0.99},{n:"Sebastian Yatra",h:77.92,p:1901,pct:0.85},{n:"Maluma",h:77.38,p:2363,pct:0.85}
+    {n:"Morat",h:328.25,p:7318,pct:3.59,img:"https://cdn-images.dzcdn.net/images/artist/98d8836cb131fb50bc733ff2b3328497/500x500-000000-80-0-0.jpg"},
+    {n:"Justin Bieber",h:188.24,p:5085,pct:2.06,img:"https://cdn-images.dzcdn.net/images/artist/fe097f693cebf1f882e3da79e99e3bf9/500x500-000000-80-0-0.jpg"},
+    {n:"Danny Ocean",h:172.83,p:4089,pct:1.89,img:"https://cdn-images.dzcdn.net/images/artist/0731bb1c0cf5cc3182ecbf1c44886d1f/500x500-000000-80-0-0.jpg"},
+    {n:"TINI",h:166.90,p:3989,pct:1.83,img:"https://cdn-images.dzcdn.net/images/artist/efb8ac71cf0c9358acbce2b8126bfa39/500x500-000000-80-0-0.jpg"},
+    {n:"The Weeknd",h:158.05,p:3261,pct:1.73,img:"https://cdn-images.dzcdn.net/images/artist/581693b4724a7fcfa754455101e13a44/500x500-000000-80-0-0.jpg"},
+    {n:"Bad Bunny",h:148.09,p:3679,pct:1.62,img:"https://cdn-images.dzcdn.net/images/artist/45aaf836629158d714432ae37e552ee7/500x500-000000-80-0-0.jpg"},
+    {n:"One Direction",h:139.20,p:3992,pct:1.52,img:"https://cdn-images.dzcdn.net/images/artist/6760dba71ba14145eec5478d8b135c55/500x500-000000-80-0-0.jpg"},
+    {n:"Ariana Grande",h:132.13,p:3088,pct:1.45,img:"https://cdn-images.dzcdn.net/images/artist/3504ffe2519090026bc359b689d22e20/500x500-000000-80-0-0.jpg"},
+    {n:"Reik",h:120.68,p:3214,pct:1.32,img:"https://cdn-images.dzcdn.net/images/artist/341c108bdba81d9320eac91ebb3257a1/500x500-000000-80-0-0.jpg"},
+    {n:"Cristian Castro",h:114.90,p:1960,pct:1.26,img:"https://cdn-images.dzcdn.net/images/artist/40e83ce33a73b1ce3365039267f0097c/500x500-000000-80-0-0.jpg"},
+    {n:"Rauw Alejandro",h:109.95,p:2420,pct:1.20,img:"https://cdn-images.dzcdn.net/images/artist/0e7b2b93b91789a054bc3f08bb3df3a8/500x500-000000-80-0-0.jpg"},
+    {n:"Ozuna",h:91.35,p:2534,pct:1.00,img:"https://cdn-images.dzcdn.net/images/artist/df2030b9e796f55f58d2c4b68aecb18f/500x500-000000-80-0-0.jpg"},
+    {n:"J Balvin",h:90.28,p:2510,pct:0.99,img:"https://cdn-images.dzcdn.net/images/artist/325eaa46bc25052d0e3d549d60cc8225/500x500-000000-80-0-0.jpg"},
+    {n:"Sebastian Yatra",h:77.92,p:1901,pct:0.85,img:"https://cdn-images.dzcdn.net/images/artist/b1ace3bd4ae0519faad8222ebbda6b24/500x500-000000-80-0-0.jpg"},
+    {n:"Maluma",h:77.38,p:2363,pct:0.85,img:"https://cdn-images.dzcdn.net/images/artist/a1627f420e880b7229e52890b99626c9/500x500-000000-80-0-0.jpg"},
   ],
   topTracks: [
-    {t:"Déjame Ir",a:"Andrés Cepeda",h:15.84,p:290},{t:"Die For You",a:"The Weeknd",h:14.99,p:238},{t:"Por Amarte Así",a:"Cristian Castro",h:14.74,p:236},{t:"Volver a Amar",a:"Cristian Castro",h:14.66,p:215},{t:"Dime tú",a:"Danny Ocean",h:14.43,p:284},{t:"Verónica",a:"Cristian Castro",h:13.95,p:206},{t:"Labios Compartidos",a:"Maná",h:13.80,p:185},{t:"Te Necesito",a:"Cali Y El Dandee",h:13.66,p:245},{t:"Amapolas - Remix",a:"Leo Rizzi",h:13.55,p:210},{t:"Yo Quería",a:"Cristian Castro",h:13.54,p:233}
+    {t:"Déjame Ir",a:"Andrés Cepeda",h:15.84,p:290,img:"https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/07/20/23/0720233c-f651-cdef-9209-d22f839cd882/886447666302.jpg/300x300bb.jpg"},
+    {t:"Die For You",a:"The Weeknd",h:14.99,p:238,img:"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e2/61/f8/e261f8c1-73db-9a7a-c89e-1068f19970e0/16UMGIM67863.rgb.jpg/300x300bb.jpg"},
+    {t:"Por Amarte Así",a:"Cristian Castro",h:14.74,p:236,img:"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/51/c7/1b/51c71bcd-d2a1-4a65-2cb2-49473e87fe3f/mzi.rtugypzk.jpg/300x300bb.jpg"},
+    {t:"Volver a Amar",a:"Cristian Castro",h:14.66,p:215,img:"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/51/c7/1b/51c71bcd-d2a1-4a65-2cb2-49473e87fe3f/mzi.rtugypzk.jpg/300x300bb.jpg"},
+    {t:"Dime tú",a:"Danny Ocean",h:14.43,p:284,img:"https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/9e/30/a2/9e30a252-6e95-0015-d264-e324c718eb47/190296852060.jpg/300x300bb.jpg"},
+    {t:"Verónica",a:"Cristian Castro",h:13.95,p:206,img:"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/51/c7/1b/51c71bcd-d2a1-4a65-2cb2-49473e87fe3f/mzi.rtugypzk.jpg/300x300bb.jpg"},
+    {t:"Labios Compartidos",a:"Maná",h:13.80,p:185,img:"https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/1e/f3/e3/1ef3e381-f9db-2fb1-aead-342410d7617a/mzi.knyznjrt.jpg/300x300bb.jpg"},
+    {t:"Te Necesito",a:"Cali Y El Dandee",h:13.66,p:245,img:"https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/41/66/eb/4166eb03-583c-f6b3-700c-9f5fc1eaa3c5/00602537652617.rgb.jpg/300x300bb.jpg"},
+    {t:"Amapolas - Remix",a:"Leo Rizzi",h:13.55,p:210,img:"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/6e/1d/e1/6e1de180-d8bf-3c4f-4736-f15abdb63c62/190296600067.jpg/300x300bb.jpg"},
+    {t:"Yo Quería",a:"Cristian Castro",h:13.54,p:233,img:"https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/d1/2e/68/d12e6892-8d75-124f-597c-ce467ec99811/743219578723.jpg/300x300bb.jpg"},
   ],
   platforms: [{n:"iPhone / iOS",h:7898.50,pct:86.39},{n:"iPad / iOS",h:1115.73,pct:12.20},{n:"Windows",h:117.77,pct:1.29},{n:"Android",h:7.63,pct:0.08},{n:"Web",h:2.82,pct:0.03}],
 

@@ -4,6 +4,7 @@ import {
   BarChart2, TrendingUp, Grid3X3, Music2, PieChart as PieIcon,
   Target, List, Lightbulb, Smartphone, Tablet, Monitor, Globe, Headphones,
 } from "lucide-react";
+import { cn } from "../lib/utils";
 import { KPICard } from "./KPICard";
 import { InsightCard } from "./InsightCard";
 import { SectionLabel } from "./SectionLabel";
@@ -11,7 +12,7 @@ import { HeatmapGrid } from "./HeatmapGrid";
 import { TopList } from "./TopList";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
-  TimelineChart, HourlyChart, SkipRateChart, ArtistsChart, DonutChart,
+  TimelineChart, HourlyChart, SkipRateChart, DonutChart,
 } from "./Charts";
 
 // ── Annotations per person ───────────────────────────────────────────────────
@@ -39,6 +40,57 @@ const DEVICE_MAP = {
 function getDevice(platformName) {
   const key = Object.keys(DEVICE_MAP).find(k => platformName.includes(k)) ?? "Other";
   return DEVICE_MAP[key];
+}
+
+function ArtistGrid({ artists, color }) {
+  const maxH = artists[0].h;
+  const rankColors = ["text-yellow-400", "text-zinc-400", "text-orange-600"];
+  return (
+    <div className="space-y-1.5">
+      {artists.slice(0, 10).map((a, i) => {
+        const pct = (a.h / maxH) * 100;
+        return (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -12 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.04, duration: 0.4 }}
+            whileHover={{ x: 3, transition: { duration: 0.15 } }}
+            className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/[0.02] hover:bg-white/[0.05] border border-transparent hover:border-white/[0.06] transition-all duration-200 cursor-default"
+          >
+            <span className={cn("text-[12px] font-bold w-5 text-center shrink-0", rankColors[i] || "text-white/20")}>
+              {i + 1}
+            </span>
+            <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 ring-1 ring-white/[0.12]">
+              {a.img ? (
+                <img src={a.img} alt={a.n} className="w-full h-full object-cover" loading="lazy" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center" style={{ background: color + "25" }}>
+                  <Music2 size={14} style={{ color, opacity: 0.5 }} />
+                </div>
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[13px] font-semibold text-white/90 truncate">{a.n}</div>
+              <div className="text-[11px] text-white/35">{a.p.toLocaleString()} plays</div>
+            </div>
+            <div className="w-16 shrink-0">
+              <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${pct}%` }}
+                  transition={{ delay: i * 0.05 + 0.3, duration: 0.8, ease: "easeOut" }}
+                  className="h-full rounded-full"
+                  style={{ background: color }}
+                />
+              </div>
+              <div className="text-[10px] text-white/30 mt-0.5 text-right font-mono">{a.h.toFixed(1)}h</div>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
 }
 
 function PlatformList({ platforms, color }) {
@@ -150,12 +202,34 @@ export function PersonSection({ person }) {
         className="relative rounded-2xl overflow-hidden p-8 border border-white/[0.06]"
         style={{ background: `linear-gradient(135deg, ${colorAlpha} 0%, rgba(0,0,0,0) 60%)` }}
       >
+        {/* Blurred top-artist backdrop */}
+        {topArtists[0]?.img && (
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: `url(${topArtists[0].img})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center top",
+              opacity: 0.09,
+              filter: "blur(48px)",
+              transform: "scale(1.1)",
+            }}
+          />
+        )}
         <div className="absolute inset-0 opacity-20 pointer-events-none"
           style={{ background: `radial-gradient(ellipse at 0% 50%, ${color}30 0%, transparent 60%)` }} />
         <div className="relative flex flex-col md:flex-row md:items-center gap-6">
-          <div className="w-24 h-24 flex items-center justify-center rounded-2xl shrink-0"
-            style={{ background: colorMuted, color }}>
-            <Music2 size={40} strokeWidth={1.5} />
+          {/* Artist photo collage 3×2 */}
+          <div className="grid grid-cols-3 gap-0.5 w-24 h-24 rounded-2xl overflow-hidden shrink-0 ring-1 ring-white/[0.12]">
+            {topArtists.slice(0, 6).map((a, i) => (
+              <div key={i} className="overflow-hidden bg-white/[0.04]">
+                {a.img ? (
+                  <img src={a.img} alt={a.n} className="w-full h-full object-cover" loading="eager" />
+                ) : (
+                  <div className="w-full h-full" style={{ background: colorMuted }} />
+                )}
+              </div>
+            ))}
           </div>
           <div className="flex-1">
             <div className="text-[11px] font-bold uppercase tracking-[3px] mb-1" style={{ color }}>{archetype}</div>
@@ -222,7 +296,7 @@ export function PersonSection({ person }) {
       <SectionLabel icon={<Music2 size={14} />} color={color}>Top Artistas y Canciones</SectionLabel>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ChartCard title="Top 10 Artistas por Horas" delay={0.05}>
-          <ArtistsChart artists={topArtists.slice(0, 10)} color={color} />
+          <ArtistGrid artists={topArtists} color={color} />
         </ChartCard>
         <ChartCard title="Top 10 Canciones" delay={0.1}>
           <TopList tracks={topTracks} color={color} />
