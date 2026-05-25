@@ -42,6 +42,126 @@ function getDevice(platformName) {
   return DEVICE_MAP[key];
 }
 
+function WrappedCards({ topArtists, topTracks, color, colorMuted }) {
+  const artist = topArtists[0];
+  const track = topTracks[0];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Top Artist card */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="relative overflow-hidden rounded-2xl h-52 cursor-default group"
+        style={{ background: "#0d0d0d" }}
+      >
+        {/* Artist photo full-bleed */}
+        {artist.img && (
+          <img
+            src={artist.img}
+            alt={artist.n}
+            className="absolute inset-0 w-full h-full object-cover object-top opacity-70 group-hover:opacity-80 transition-opacity duration-500"
+          />
+        )}
+        {/* Gradient overlay */}
+        <div className="absolute inset-0"
+          style={{ background: `linear-gradient(120deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 50%, transparent 100%)` }} />
+        <div className="absolute inset-0"
+          style={{ background: `linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 45%)` }} />
+        {/* Content */}
+        <div className="relative h-full p-5 flex flex-col justify-between">
+          <div
+            className="text-[10px] font-bold uppercase tracking-[0.2em]"
+            style={{ color: color + "cc" }}
+          >
+            Tu Artista #1
+          </div>
+          <div>
+            <div
+              className="font-display font-bold leading-tight mb-1"
+              style={{
+                fontSize: "clamp(1.4rem, 2.2vw, 1.9rem)",
+                background: `linear-gradient(135deg, #fff 40%, ${color} 100%)`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              {artist.n}
+            </div>
+            <div className="flex items-center gap-3">
+              <span
+                className="text-[11px] font-bold px-2.5 py-0.5 rounded-full"
+                style={{ background: color + "25", color }}
+              >
+                {artist.h.toFixed(0)} horas
+              </span>
+              <span className="text-[11px] text-white/40">
+                {artist.p.toLocaleString("es-MX")} reproducciones
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Top Track card */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="relative overflow-hidden rounded-2xl h-52 cursor-default group"
+        style={{ background: "#0d0d0d" }}
+      >
+        {/* Album art full-bleed */}
+        {track.img && (
+          <img
+            src={track.img}
+            alt={track.t}
+            className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-70 transition-opacity duration-500"
+          />
+        )}
+        <div className="absolute inset-0"
+          style={{ background: `linear-gradient(120deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 55%, transparent 100%)` }} />
+        <div className="absolute inset-0"
+          style={{ background: `linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 48%)` }} />
+        {/* Content */}
+        <div className="relative h-full p-5 flex flex-col justify-between">
+          <div
+            className="text-[10px] font-bold uppercase tracking-[0.2em]"
+            style={{ color: color + "cc" }}
+          >
+            Tu Canción #1
+          </div>
+          <div>
+            <div
+              className="font-display font-bold leading-tight mb-1 line-clamp-2"
+              style={{
+                fontSize: "clamp(1.3rem, 2vw, 1.75rem)",
+                background: `linear-gradient(135deg, #fff 40%, ${color} 100%)`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              {track.t}
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] text-white/50 truncate">{track.a}</span>
+              <span
+                className="text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0"
+                style={{ background: color + "25", color }}
+              >
+                {track.p.toLocaleString("es-MX")} plays
+              </span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 function ArtistGrid({ artists, color }) {
   const maxH = artists[0].h;
   const rankColors = ["text-yellow-400", "text-zinc-400", "text-orange-600"];
@@ -260,6 +380,9 @@ export function PersonSection({ person }) {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {kpis.map((k, i) => <KPICard key={i} {...k} color={color} delay={i * 0.07} />)}
       </div>
+
+      {/* Wrapped statement cards */}
+      <WrappedCards topArtists={topArtists} topTracks={topTracks} color={color} colorMuted={colorMuted} />
 
       {/* Timeline con anotaciones */}
       <SectionLabel icon={<TrendingUp size={14} />} color={color}>Evolución Temporal</SectionLabel>
